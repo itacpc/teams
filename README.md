@@ -23,7 +23,7 @@ pipenv shell
 You need to run this only the first time:
 
 ```
-python -c 'from teams import init_db; init_db()'
+psql databasename < schema.sql
 ```
 
 ### Create a secret.py file

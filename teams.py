@@ -26,11 +26,6 @@ class Database:
         self._engine = sqlalchemy.create_engine(app.config['DATABASE_URI'], convert_unicode=True)
         self._session = sqlalchemy.orm.scoped_session(sqlalchemy.orm.sessionmaker(autocommit=False, autoflush=False, bind=self._engine))
 
-    def init(self):
-        with app.open_resource(self.SCHEMA, mode='r') as f:
-            self._session.execute(f.read())
-        self._session.commit()
-
     def query(self, query, args=None, one=False):
         cur = self._session.execute(query, args)
         try:
