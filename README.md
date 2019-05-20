@@ -26,6 +26,14 @@ You need to run this only the first time:
 python -c 'from teams import init_db; init_db()'
 ```
 
+### Create a secret.py file
+
+With a content similar to: (but not exactly this!)
+
+```
+secret = b'qwertyuiop123456789'
+```
+
 ### Running the flask app
 
 ```
