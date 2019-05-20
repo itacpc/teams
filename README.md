@@ -6,6 +6,18 @@ Secondly, ensure you have [pipenv](https://docs.pipenv.org/en/latest/) installed
 
 Then you can proceed.
 
+### Install dependencies
+
+```
+pipenv install
+```
+
+### Access your virtual shell
+
+```
+pipenv shell
+```
+
 ### Initialize the DB
 
 You need to run this only the first time:
