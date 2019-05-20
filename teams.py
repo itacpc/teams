@@ -113,8 +113,8 @@ def index():
             WHERE university = u.id and confirmed
         ) 
         FROM universities u 
-        ORDER BY 3 DESC, 4 DESC, 2 ASC
-    """)  # TODO: order nocase
+        ORDER BY 3 DESC, 4 DESC, upper(u.name)
+    """)
 
     # Move the "other" university to the top
     index = -1
