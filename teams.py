@@ -83,18 +83,18 @@ def close_connection(exception):
 def index():
     unis = get_db().query("""
         SELECT u.id, u.name, (
-            SELECT count(*) 
-            FROM teams t 
+            SELECT count(*)
+            FROM teams t
             WHERE university = u.id AND (
-                SELECT count(*) 
+                SELECT count(*)
                 FROM students
                  WHERE team = t.id) > 0
         ), (
-            SELECT count(*) 
-            FROM students 
+            SELECT count(*)
+            FROM students
             WHERE university = u.id and confirmed
-        ) 
-        FROM universities u 
+        )
+        FROM universities u
         ORDER BY 3 DESC, 4 DESC, upper(u.name)
     """)
 
@@ -120,8 +120,8 @@ def index():
             unis = [unis[index]] + unis[:index] + unis[index + 1:]
 
     team_count = get_db().query("""
-        SELECT count(*) 
-        FROM teams t 
+        SELECT count(*)
+        FROM teams t
         WHERE (SELECT count(*) FROM students WHERE team = t.id) > 0
     """, one=True)
 
@@ -154,22 +154,22 @@ def uni_page(uni):
     uni_full, = get_db().query("SELECT name FROM universities WHERE id = :uni", args, one=True)
 
     teams = get_db().query("""
-        SELECT id, name 
-        FROM teams t 
-        WHERE t.university = :uni AND (select count(*) from students where team = t.id) > 0 
+        SELECT id, name
+        FROM teams t
+        WHERE t.university = :uni AND (select count(*) from students where team = t.id) > 0
         ORDER BY 1
     """, args)
 
     students = get_db().query("""
-        SELECT team, first_name, last_name, olinfo_handle, codeforces_handle, topcoder_handle 
-        FROM students 
-        WHERE confirmed AND team IS NOT NULL AND university = :uni 
+        SELECT team, first_name, last_name, olinfo_handle, codeforces_handle, topcoder_handle
+        FROM students
+        WHERE confirmed AND team IS NOT NULL AND university = :uni
         ORDER BY 1, 2, 3
     """, args)
 
     students_left = get_db().query("""
         SELECT first_name, last_name, olinfo_handle, codeforces_handle, topcoder_handle
-        FROM students 
+        FROM students
         WHERE confirmed AND team IS NULL AND university = :uni
     """, args)
 
@@ -221,18 +221,18 @@ def new_student(uni):
 
         try:
             args = {
-                'fname': fname, 
-                'lname': lname, 
-                'email': form.email.data, 
-                'pw_hash': pw_hash, 
-                'uni': uni, 
+                'fname': fname,
+                'lname': lname,
+                'email': form.email.data,
+                'pw_hash': pw_hash,
+                'uni': uni,
                 'secret': secret,
-                'olinfo': form.olinfo_handle.data or None, 
+                'olinfo': form.olinfo_handle.data or None,
                 'codeforces': form.codeforces_handle.data or None,
                 'topcoder': form.topcoder_handle.data or None,
             }
             get_db().query("""
-                INSERT INTO students(first_name, last_name, email, password, university, secret, olinfo_handle, codeforces_handle, topcoder_handle) 
+                INSERT INTO students(first_name, last_name, email, password, university, secret, olinfo_handle, codeforces_handle, topcoder_handle)
                 VALUES (:fname, :lname, :email, :pw_hash, :uni, :secret, :olinfo, :codeforces, :topcoder)
             """, args)
 
@@ -287,13 +287,26 @@ def new_team(uni):
     if request.method == 'POST' and form.validate():
         secret = get_new_secret(30)
 
+        student_id, = get_db().query(
+            "SELECT id FROM students WHERE email = :email",
+            {'email': session["email"]}, one=True
+        )
+
         team_id, = get_db().query("""
             INSERT INTO teams(name, university, secret)
             VALUES (:team_name, :uni, :secret)
             RETURNING id
         """, {'team_name': form.team_name.data, 'uni': uni, 'secret': secret}, one=True)
 
-        get_db().query("UPDATE students SET team = :team_id WHERE email = :email", {'team_id': team_id, 'email': session["email"]})
+        get_db().query(
+            "INSERT INTO teamjoinlog(student, team, joining) VALUES (:student_id, :team_id, :joining)",
+            {'student_id': student_id, 'team_id': team_id, 'joining': True}
+        )
+
+        get_db().query(
+            "UPDATE students SET team = :team_id WHERE id = :student_id",
+            {'team_id': team_id, 'student_id': student_id}
+        )
         get_db().commit()
 
         # set team in session
@@ -377,8 +390,8 @@ def my_profile():
         return redirect(url_for('login'))
 
     uni, team_id, student_full = get_db().query("""
-            SELECT s.university, s.team, s.first_name || ' ' || s.last_name 
-            FROM students s 
+            SELECT s.university, s.team, s.first_name || ' ' || s.last_name
+            FROM students s
             WHERE s.email = :email
         """, {'email': session["email"]}, one=True)
 
