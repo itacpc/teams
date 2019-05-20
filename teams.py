@@ -59,25 +59,12 @@ def get_new_secret(length):
     return ''.join(random.choice(letters) for _ in range(length))
 
 
-def send_confirmation_email(address, secret):
+def send_confirmation_email(receiver_email, secret):
     # Create a secure SSL context
     context = ssl.create_default_context()
 
     sender_email = "noreply@itacpc.it"
-    receiver_email = address
-    message = f"""\
-From: ITACPC <noreply@itacpc.it>
-To: {receiver_email}
-Subject: ITACPC Registration
-
-Hello, thanks for registering to the ITACPC website. In order to confirm your account you should visit the following URL and then login:
-
-https://teams.itacpc.it/confirm-email/{secret}
-
-After you successfully login, you will be able to either create a team or join an existing one. Now it's time to find team mates!
-
-See you in the next contest,
-ITACPC Staff"""
+    message = render_template('registration_confirm.jinja2', secret=secret, receiver_email=receiver_email)
 
     try:
         with smtplib.SMTP_SSL(app.config['SMTP_SERVER'], app.config['SMTP_PORT'], context=context) as server:
