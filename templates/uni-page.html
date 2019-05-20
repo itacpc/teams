@@ -1,0 +1,69 @@
+{% extends "layout.html" %}
+
+{% block body %}
+    <div class="card">
+        <img class="card-picture" src="{{ url_for('static', filename='flags/' + uni + '.png') }}">
+        <div class="card-info">
+            <h1>{{ uni_full }}</h1>
+            <a href="{{ url_for('index') }}">Back to list of universities</a>
+            {% if session["email"] and "team" not in session %}
+            <a style="background-color: plum;" href="{{ url_for('new_team', uni=uni) }}">Create a new team</a>
+            {% endif %}
+            {% if not session["email"] %}
+            <a style="background-color: lightgreen;" href="{{ url_for('new_student', uni=uni) }}">Register as a new student of this university</a>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="card-container">
+        <div class="card">
+            <div class="card-info">
+                <h3>Teams</h3>
+                <ul>
+                    {% for t, g in grouped %}
+                    <li>
+                        <strong>{{ t }}</strong> — {{ g | length }}/3 members
+                        <ul>
+                            {% for s in g %}
+                            <li>
+                                <i>{{ (s[0] + " " + s[1]).title() }}</i>
+                                ({% if s[2] %}<a href="https://training.olinfo.it/#/user/{{ s[2] }}/profile">oli</a>{% else %}oli{% endif %}
+                                &bullet;
+                                {% if s[3] %}<a href="https://codeforces.com/profile/{{ s[3] }}">cf</a>{% else %}cf{% endif %}
+                                &bullet;
+                                {% if s[4] %}<a href="https://www.topcoder.com/members/{{ s[4] }}">tc</a>{% else %}tc{% endif %})
+                            </li>
+                            {% endfor %}
+                        </ul>
+                    </li>
+                    {% else %}
+                    <li style="color: red">
+                        no teams yet
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-info">
+                <h3>Students not yet assigned to a team</h3>
+                <ul class="students-list">
+                    {% for s in students_left %}
+                    <li>
+                        <i>{{ (s[0] + " " + s[1]).title() }}</i>
+                        ({% if s[2] %}<a href="https://training.olinfo.it/#/user/{{ s[2] }}/profile">oli</a>{% else %}oli{% endif %}
+                        &bullet;
+                        {% if s[3] %}<a href="https://codeforces.com/profile/{{ s[3] }}">cf</a>{% else %}cf{% endif %}
+                        &bullet;
+                        {% if s[4] %}<a href="https://www.topcoder.com/members/{{ s[4] }}">tc</a>{% else %}tc{% endif %})
+                    </li>
+                    {% else %}
+                    <li style="color: red">
+                        no students yet
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,34 @@
+{% extends "layout.html" %}
+
+{% block body %}
+  <div class="card">
+    <img class="card-picture" src="{{ url_for('static', filename='flags/' + uni + '.png') }}">
+    <div class="card-info">
+      Hello,
+      <h1>{{ student_full }}</h1>
+      <a href="{{ url_for('index') }}">Back to list of universities</a>
+      <a href="{{ url_for('uni_page', uni=uni) }}">Back to university</a>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-info">
+        <div>
+            {% if team_name %}
+                You're part of team <strong>{{ team_name }}</strong> which is currently formed by these students:
+                <ol>
+                    {% for m in team_members %}
+                        <li>{{ m[0] }}</li>
+                    {% endfor %}
+                </ol>
+                If you want to invite new members (remember that maximum 3 people can be in the same team) you can use the following link:
+                <pre style="font-size: larger">https://teams.itacpc.it/{{ uni }}/join/{{ secret }}</pre>
+
+                If you want to <strong>leave your own team</strong> then <a href="{{ url_for('leave_team') }}">click here</a>.
+            {% else %}
+                Hi {{ student_full }}, you're currently not part of any team. But you can <strong>create</strong> or <strong>join</strong> one!
+            {% endif %}
+        </div>
+    </div>
+  </div>
+{% endblock %}

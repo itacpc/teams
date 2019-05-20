@@ -1,0 +1,45 @@
+{% extends "layout.html" %}
+
+{% block body %}
+  <div class="card">
+    <img class="card-picture" src="{{ url_for('static', filename='flags/' + uni + '.png') }}">
+    <div class="card-info">
+      Registration of a new student of
+      <h1>{{ uni_full }}</h1>
+      <a href="{{ url_for('index') }}">Back to list of universities</a>
+      <a href="{{ url_for('uni_page', uni=uni) }}">Back to university</a>
+    </div>
+  </div>
+
+  {% if uni_domain != '*' %}
+  <div style="font-style: italic; margin-top: 0.5rem; background-color: yellow; display: inline-block;">
+    <strong>WARNING</strong>: your email address should have the following structure:<br>
+
+    {% for dom in uni_domain.split(',') %}
+
+    {% if loop.index > 1 %}
+        <span> or </span>
+      {% endif %}
+
+      <span style="font-family: monospace;">...@...{{ dom }}</span>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  <div class="card">
+    {% from "_formhelpers.html" import render_field %}
+    <form method=post>
+      <dl>
+        {{ render_field(form.first_name) }}
+        {{ render_field(form.last_name) }}
+        {{ render_field(form.email) }}
+        {{ render_field(form.password) }}
+        {{ render_field(form.confirm) }}
+        {{ render_field(form.olinfo_handle) }}
+        {{ render_field(form.codeforces_handle) }}
+        {{ render_field(form.topcoder_handle) }}
+      </dl>
+      <p><input type=submit value=Register>
+    </form>
+  </div>
+{% endblock %}
