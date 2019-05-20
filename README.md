@@ -26,13 +26,10 @@ You need to run this only the first time:
 psql databasename < schema.sql
 ```
 
-### Create a secret.py file
+### Create a config.py file
 
-With a content similar to: (but not exactly this!)
-
-```
-secret = b'qwertyuiop123456789'
-```
+Copy the file `config_example.py` file in a file named `config.py` 
+and edit the required parameters as documented. 
 
 ### Run the flask app
 
