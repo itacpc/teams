@@ -1,19 +1,31 @@
+DROP SCHEMA public CASCADE;
+CREATE SCHEMA public;
+
 create table universities(
     id text primary key,
     name text not null,
     domain text not null
 );
 
+create table teams(
+    id serial primary key,
+    name text not null,
+    university text not null,
+    secret text not null unique,
+    creation_date timestamp not null default current_timestamp,
+    foreign key(university) references universities(id)
+);
+
 create table students(
-    id integer primary key autoincrement,
+    id serial primary key,
     first_name text not null,
     last_name text not null,
     email text not null unique,
     password text not null,
-    university integer not null,
+    university text not null,
     team integer,
     secret text not null unique,
-    confirmed boolean default 0,
+    confirmed boolean default FALSE,
     olinfo_handle text,
     codeforces_handle text,
     topcoder_handle text,
@@ -22,17 +34,8 @@ create table students(
     foreign key(team) references teams(id)
 );
 
-create table teams(
-    id integer primary key autoincrement,
-    name text not null,
-    university integer not null,
-    secret text not null unique,
-    creation_date timestamp not null default current_timestamp,
-    foreign key(university) references universities(id)
-);
-
 create table teamjoinlog(
-    id integer primary key autoincrement,
+    id serial primary key,
     student integer not null,
     team integer not null,
     joining boolean not null,
