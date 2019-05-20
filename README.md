@@ -34,7 +34,7 @@ With a content similar to: (but not exactly this!)
 secret = b'qwertyuiop123456789'
 ```
 
-### Running the flask app
+### Run the flask app
 
 ```
 FLASK_APP=teams.py FLASK_ENV=development flask run --host=0.0.0.0
