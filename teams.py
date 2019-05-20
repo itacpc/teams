@@ -11,15 +11,11 @@ import sqlalchemy.orm
 from flask import flash, Flask, g, redirect, render_template, request, session, url_for
 from flask_bcrypt import Bcrypt
 
-from secret import secret as my_long_secret
-
 app = Flask(__name__)
-app.secret_key = my_long_secret
+app.config.from_pyfile('config.py')
+
 bcrypt = Bcrypt(app)
 
-
-# app.config["APPLICATION_ROOT"] = "/teams/"
-app.config['DATABASE_URI'] = 'postgresql://ale:ale96@localhost:5432/itacpc'
 MAX_MEMBERS = 3
 
 
@@ -35,7 +31,7 @@ class Database:
             self._session.execute(f.read())
         self._session.commit()
 
-    def query(self, query, args=(), one=False):
+    def query(self, query, args=None, one=False):
         cur = self._session.execute(query, args)
         try:
             rv = cur.fetchall()
@@ -64,9 +60,6 @@ def get_new_secret(length):
 
 
 def send_confirmation_email(address, secret):
-    port = 465  # For SSL
-    password = open("mailapikey.txt").read().strip()
-
     # Create a secure SSL context
     context = ssl.create_default_context()
 
@@ -87,8 +80,8 @@ See you in the next contest,
 ITACPC Staff"""
 
     try:
-        with smtplib.SMTP_SSL("smtp.sendgrid.net", port, context=context) as server:
-            server.login("apikey", password)
+        with smtplib.SMTP_SSL(app.config['SMTP_SERVER'], app.config['SMTP_PORT'], context=context) as server:
+            server.login(app.config['SMTP_USER'], app.config['SMTP_PASSWORD'])
             server.sendmail(sender_email, receiver_email, message)
     except smtplib.SMTPException as e:
         if not app.debug:
