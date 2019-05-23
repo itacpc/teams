@@ -4,6 +4,8 @@ Firstly, ensure you have Python 3.7 installed.
 
 Secondly, ensure you have [pipenv](https://docs.pipenv.org/en/latest/) installed.
 
+Thirdly, ensure you have a PostgreSQL user and database set up in your machine (you can follow [this tutorial](https://www.digitalocean.com/community/tutorials/how-to-install-and-use-postgresql-on-ubuntu-18-04)).
+
 Then you can proceed.
 
 ### Install dependencies
