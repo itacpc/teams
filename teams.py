@@ -575,9 +575,8 @@ def forgot():
                 flash('Done! Check you inbox (also the spam folder!) for the password reset link.')
             else:
                 flash('You should wait about %d hours before another request' % ((timedelta(days=1) - elapsed) // timedelta(hours=1)))
-        except TypeError as e:
+        except TypeError:
             flash("Wrong email or password!")
-            raise e
 
     return render_template('forgot.html', form=form)
 
