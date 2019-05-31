@@ -8,6 +8,8 @@ import sqlalchemy
 import sqlalchemy.exc
 import sqlalchemy.orm
 
+from datetime import datetime, timedelta
+
 from flask import flash, Flask, g, redirect, render_template, request, session, url_for
 from flask_bcrypt import Bcrypt
 
@@ -17,6 +19,7 @@ app.config.from_pyfile('config.py')
 bcrypt = Bcrypt(app)
 
 MAX_MEMBERS = 3
+GENERATED_SECRET_LENGTH = 30
 
 
 class Database:
@@ -49,27 +52,34 @@ def get_db():
     return g._database
 
 
-def get_new_secret(length):
+def get_new_secret(length=None):
+    if length is None:
+        length = GENERATED_SECRET_LENGTH
+
     letters = string.ascii_lowercase + string.ascii_uppercase + string.digits
     return ''.join(random.choice(letters) for _ in range(length))
 
 
-def send_confirmation_email(receiver_email, secret):
-    # Create a secure SSL context
-    context = ssl.create_default_context()
-
+def send_email(receiver_email, email_template, **template_args):
     sender_email = "noreply@itacpc.it"
-    message = render_template('registration_confirm.jinja2', secret=secret, receiver_email=receiver_email)
+    message = render_template(email_template, receiver_email=receiver_email, **template_args)
 
-    try:
-        with smtplib.SMTP_SSL(app.config['SMTP_SERVER'], app.config['SMTP_PORT'], context=context) as server:
+    if app.debug:
+        print(f"[would send this email to {receiver_email}]:", file=sys.stderr)
+        print(message, file=sys.stderr)
+    else:
+        with smtplib.SMTP_SSL(app.config['SMTP_SERVER'], app.config['SMTP_PORT'],
+                              context=ssl.create_default_context()) as server:
             server.login(app.config['SMTP_USER'], app.config['SMTP_PASSWORD'])
             server.sendmail(sender_email, receiver_email, message)
-    except smtplib.SMTPException as e:
-        if not app.debug:
-            raise e
-        print("Not sending email -- in debug mode", file=sys.stderr)
-        print(f"Here is the {message}", file=sys.stderr)
+
+
+def send_confirmation_email(receiver_email, secret):
+    send_email(receiver_email, 'email_registration_confirm.jinja2', secret=secret)
+
+
+def send_forgot_password_email(receiver_email, secret):
+    send_email(receiver_email, 'email_forgot_password.jinja2', secret=secret)
 
 
 @app.teardown_appcontext
@@ -197,46 +207,34 @@ def new_student(uni):
     uni_full, uni_domain = get_db().query("SELECT name, domain FROM universities WHERE id = :uni", {'uni': uni}, one=True)
 
     class RegistrationForm(Form):
+        email = StringField('Email Address', [
+                            validators.Length(min=6, max=100), DomainValidator(uni_domain),
+                            validators.Regexp(r"(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)",
+                                              message="Invalid characters in email address")])
+
         first_name = StringField('First Name', [validators.Length(min=1, max=100)])
         last_name = StringField('Last Name', [validators.Length(min=1, max=100)])
-        email = StringField('Email Address', [validators.Length(min=6, max=100), DomainValidator(uni_domain), validators.Regexp(r"(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)", message="Invalid characters in email address")])
-        password = PasswordField('New Password', [
-            validators.DataRequired(),
-            validators.EqualTo('confirm', message='Passwords must match')
-        ])
-        confirm = PasswordField('Repeat Password')
-
-        olinfo_handle = StringField('(Optional) Your username on training.olinfo.it', [validators.Length(max=100)])
-        codeforces_handle = StringField('(Optional) Your username on codeforces.com', [validators.Length(max=100)])
-        topcoder_handle = StringField('(Optional) Your username on topcoder.com', [validators.Length(max=100)])
 
     form = RegistrationForm(request.form)
 
     if request.method == 'POST' and form.validate():
-        pw_hash = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
-        secret = get_new_secret(30)
+        secret = get_new_secret()
 
-        fname = form.first_name.data.title()
-        lname = form.last_name.data.title()
+        args = {
+            'fname': form.first_name.data.title(),
+            'lname': form.last_name.data.title(),
+            'email': form.email.data.lower(),
+            'uni': uni,
+            'secret': secret,
+        }
 
         try:
-            args = {
-                'fname': fname,
-                'lname': lname,
-                'email': form.email.data,
-                'pw_hash': pw_hash,
-                'uni': uni,
-                'secret': secret,
-                'olinfo': form.olinfo_handle.data or None,
-                'codeforces': form.codeforces_handle.data or None,
-                'topcoder': form.topcoder_handle.data or None,
-            }
             get_db().query("""
-                INSERT INTO students(first_name, last_name, email, password, university, secret, olinfo_handle, codeforces_handle, topcoder_handle)
-                VALUES (:fname, :lname, :email, :pw_hash, :uni, :secret, :olinfo, :codeforces, :topcoder)
+                INSERT INTO students(first_name, last_name, email, university, secret)
+                VALUES (:fname, :lname, :email, :uni, :secret)
             """, args)
 
-            send_confirmation_email(form.email.data, secret)
+            send_confirmation_email(args['email'], secret)
 
             get_db().commit()
 
@@ -251,17 +249,83 @@ def new_student(uni):
     return render_template('new-student.html', form=form, uni=uni, uni_domain=uni_domain, uni_full=uni_full)
 
 
-@app.route('/confirm-email/<secret>')
+@app.route('/confirm-email/<secret>', methods=['GET', 'POST'])
 def confirm_email(secret):
-    student = get_db().query("SELECT id FROM students WHERE secret = :secret", {'secret': secret}, one=True)
+    student = get_db().query("SELECT id, email, first_name || ' ' || last_name, university FROM students WHERE secret = :secret", {'secret': secret}, one=True)
 
     if student is None:
         return "The URL looks wrong, did you copy and paste it correctly?", 400
 
-    get_db().query("UPDATE students SET confirmed = TRUE WHERE id = :id", {'id': student[0]})
-    get_db().commit()
-    flash("Email address confirmed!")
-    return redirect(url_for('login'))
+    class ConfirmForm(Form):
+        password = PasswordField('New Password', [
+            validators.DataRequired(),
+            validators.EqualTo('confirm', message='Passwords must match')
+        ])
+        confirm = PasswordField('Repeat Password')
+
+        olinfo_handle = StringField('(Optional) Your username on training.olinfo.it', [validators.Length(max=100)])
+        codeforces_handle = StringField('(Optional) Your username on codeforces.com', [validators.Length(max=100)])
+        topcoder_handle = StringField('(Optional) Your username on topcoder.com', [validators.Length(max=100)])
+        kattis_handle = StringField('(Optional) Your username on open.kattis.com', [validators.Length(max=100)])
+
+    form = ConfirmForm(request.form)
+
+    if request.method == 'POST' and form.validate():
+        pw_hash = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
+
+        args = {
+            'id': student[0],
+            'pw_hash': pw_hash,
+            'olinfo': form.olinfo_handle.data or None,
+            'codeforces': form.codeforces_handle.data or None,
+            'topcoder': form.topcoder_handle.data or None,
+            'kattis': form.kattis_handle.data or None,
+        }
+        get_db().query("""UPDATE students SET
+            confirmed = TRUE, password = :pw_hash,
+            olinfo_handle = :olinfo, codeforces_handle = :codeforces,
+            topcoder_handle = :topcoder, kattis_handle = :kattis
+            WHERE id = :id""", args)
+        get_db().commit()
+        flash("Account confirmed!")
+        return redirect(url_for('login'))
+
+    return render_template('confirm_email.html', form=form, email=student[1], student_full=student[2], uni=student[3])
+
+
+@app.route('/reset-password/<secret>', methods=['GET', 'POST'])
+def reset_password(secret):
+    try:
+        student_id, student_email, student_full, uni, secret_creation_date = get_db().query("SELECT id, email, first_name || ' ' || last_name, university, secret_creation_date FROM students WHERE secret = :secret", {'secret': secret}, one=True)
+    except TypeError:
+        return "The URL looks wrong, did you copy and paste it correctly?", 400
+
+    class ResetPasswordForm(Form):
+        password = PasswordField('New Password', [
+            validators.DataRequired(),
+            validators.EqualTo('confirm', message='Passwords must match')
+        ])
+        confirm = PasswordField('Repeat Password')
+
+    form = ResetPasswordForm(request.form)
+
+    if request.method == 'POST' and form.validate():
+        if datetime.utcnow() - secret_creation_date > timedelta(days=1):
+            flash('The link has expired, you should request a new password reset.')
+        pw_hash = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
+
+        args = {
+            'id': student_id,
+            'pw_hash': pw_hash,
+        }
+        get_db().query("""UPDATE students SET
+            password = :pw_hash
+            WHERE id = :id""", args)
+        get_db().commit()
+        flash("Password reset was successful!")
+        return redirect(url_for('login'))
+
+    return render_template('reset_password.html', form=form, email=student_email, student_full=student_full, uni=uni)
 
 
 @app.route('/<uni>/new-team', methods=['GET', 'POST'])
@@ -285,7 +349,7 @@ def new_team(uni):
     form = TeamCreationForm(request.form)
 
     if request.method == 'POST' and form.validate():
-        secret = get_new_secret(30)
+        secret = get_new_secret()
 
         student_id, = get_db().query(
             "SELECT id FROM students WHERE email = :email",
@@ -427,7 +491,7 @@ def leave_team():
 
         get_db().query(
             "UPDATE teams SET secret = :secret WHERE id = :team_id",
-            {'secret': get_new_secret(30), 'team_id': team_id}
+            {'secret': get_new_secret(), 'team_id': team_id}
         )
 
         get_db().commit()
@@ -443,7 +507,10 @@ def leave_team():
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     class LoginForm(Form):
-        email = StringField('Email Address')
+        email = StringField('Email Address', [
+                            validators.Length(min=6, max=100),
+                            validators.Regexp(r"(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)",
+                                              message="Invalid characters in email address")])
         password = PasswordField('Password')
         submit = SubmitField('Submit')
 
@@ -454,11 +521,10 @@ def login():
 
     if request.method == 'POST' and form.validate():
         try:
+            args = {'email': form.email.data.lower()}
             pw_hash, university, team, confirmed = get_db().query(
                 "SELECT password, university, team, confirmed FROM students WHERE email = :email",
-                {'email': form.email.data},
-                one=True
-            )
+                args, one=True)
 
             if not confirmed:
                 flash("You should first confirm your email address")
@@ -474,6 +540,46 @@ def login():
             flash("Wrong email or password!")
 
     return render_template('login.html', form=form)
+
+
+@app.route('/forgot', methods=['GET', 'POST'])
+def forgot():
+    class ForgotPasswordForm(Form):
+        email = StringField('Email Address', [
+                            validators.Length(min=6, max=100),
+                            validators.Regexp(r"(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)",
+                                              message="Invalid characters in email address")])
+
+    if "email" in session:
+        return redirect(url_for("index"))
+
+    form = ForgotPasswordForm(request.form)
+
+    if request.method == 'POST' and form.validate():
+        args = {'email': form.email.data.lower()}
+
+        try:
+            args['secret'] = get_new_secret()
+
+            secret_creation_date, = get_db().query("SELECT secret_creation_date FROM students WHERE email = :email", args, one=True)
+
+            elapsed = datetime.utcnow() - secret_creation_date
+            if elapsed > timedelta(days=1):
+                get_db().query(
+                    "UPDATE students set secret = :secret, secret_creation_date = current_timestamp WHERE email = :email",
+                    args)
+                get_db().commit()
+
+                send_forgot_password_email(args["email"], args['secret'])
+
+                flash('Done! Check you inbox (also the spam folder!) for the password reset link.')
+            else:
+                flash('You should wait about %d hours before another request' % ((timedelta(days=1) - elapsed) // timedelta(hours=1)))
+        except TypeError as e:
+            flash("Wrong email or password!")
+            raise e
+
+    return render_template('forgot.html', form=form)
 
 
 @app.route('/logout')

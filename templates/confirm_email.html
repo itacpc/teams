@@ -1,0 +1,35 @@
+{% extends "layout.html" %}
+
+{% block body %}
+  <div class="card">
+    <img class="card-picture" src="{{ url_for('static', filename='flags/' + uni + '.png') }}">
+    <div class="card-info">
+      Hello,
+      <h1>{{ student_full }}</h1>
+      <a href="{{ url_for('index') }}">Back to list of universities</a>
+      <a href="{{ url_for('uni_page', uni=uni) }}">Back to university</a>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-info">
+      {% from "_formhelpers.html" import render_field %}
+      <form method=post>
+        <div style="margin-bottom: 1rem">To confirm your account, you now need to choose a password:</div>
+        <dl>
+          <dt>Email Address
+          <dd><strong>{{ email }}</strong></dd>
+
+          {{ render_field(form.password) }}
+          {{ render_field(form.confirm) }}
+
+          {{ render_field(form.olinfo_handle) }}
+          {{ render_field(form.codeforces_handle) }}
+          {{ render_field(form.topcoder_handle) }}
+          {{ render_field(form.kattis_handle) }}
+        </dl>
+        <p><input type="submit" value="Confirm account">
+      </form>
+    </div>
+  </div>
+{% endblock %}

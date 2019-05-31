@@ -18,17 +18,20 @@ create table students(
     first_name text not null,
     last_name text not null,
     email text not null unique,
-    password text not null,
+    password text,
     university text not null,
     team integer,
-    secret text not null unique,
     confirmed boolean default FALSE,
-    olinfo_handle text,
     codeforces_handle text,
+    kattis_handle text,
+    olinfo_handle text,
     topcoder_handle text,
+    secret text not null unique,
+    secret_creation_date timestamp,
     creation_date timestamp not null default current_timestamp,
     foreign key(university) references universities(id),
-    foreign key(team) references teams(id)
+    foreign key(team) references teams(id),
+    check ((confirmed is true) = (password is not null))
 );
 
 create table teamjoinlog(

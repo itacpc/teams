@@ -10,13 +10,9 @@
     <form method=post>
       <dl>
         {{ render_field(form.email) }}
-        {{ render_field(form.password) }}
       </dl>
-      <p style="margin-bottom: 1rem">
-        <a href="{{ url_for('forgot') }}">Forgot your password?</a>
-      </p>
       <p>
-        <input type=submit value="Login">
+        <input type=submit value="Reset password">
       </p>
     </form>
   </div>
