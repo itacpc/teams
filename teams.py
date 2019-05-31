@@ -172,7 +172,7 @@ def uni_page(uni):
     """, args)
 
     students = get_db().query("""
-        SELECT team, first_name, last_name, olinfo_handle, codeforces_handle, topcoder_handle
+        SELECT team, first_name, last_name, olinfo_handle, codeforces_handle, topcoder_handle, kattis_handle, github_handle
         FROM students
         WHERE confirmed AND team IS NOT NULL AND university = :uni
         ORDER BY 1, 2, 3
