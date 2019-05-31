@@ -179,7 +179,7 @@ def uni_page(uni):
     """, args)
 
     students_left = get_db().query("""
-        SELECT first_name, last_name, olinfo_handle, codeforces_handle, topcoder_handle, kattis_handle
+        SELECT first_name, last_name, olinfo_handle, codeforces_handle, topcoder_handle, kattis_handle, github_handle
         FROM students
         WHERE confirmed AND team IS NULL AND university = :uni
     """, args)
@@ -268,6 +268,7 @@ def confirm_email(secret):
         codeforces_handle = StringField('(Optional) Your username on codeforces.com', [validators.Length(max=100)])
         topcoder_handle = StringField('(Optional) Your username on topcoder.com', [validators.Length(max=100)])
         kattis_handle = StringField('(Optional) Your username on open.kattis.com', [validators.Length(max=100)])
+        github_handle = StringField('(Optional) Your username on github.com', [validators.Length(max=100)])
 
     form = ConfirmForm(request.form)
 
@@ -281,17 +282,19 @@ def confirm_email(secret):
             'codeforces': form.codeforces_handle.data or None,
             'topcoder': form.topcoder_handle.data or None,
             'kattis': form.kattis_handle.data or None,
+            'github': form.github_handle.data or None,
         }
         get_db().query("""UPDATE students SET
             confirmed = TRUE, password = :pw_hash,
             olinfo_handle = :olinfo, codeforces_handle = :codeforces,
-            topcoder_handle = :topcoder, kattis_handle = :kattis
+            topcoder_handle = :topcoder, kattis_handle = :kattis,
+            github_handle = :github
             WHERE id = :id""", args)
         get_db().commit()
         flash("Account confirmed!")
         return redirect(url_for('login'))
 
-    return render_template('confirm_email.html', form=form, email=student_email, student_full=student_full, uni=student_full)
+    return render_template('confirm_email.html', form=form, email=student_email, student_full=student_full, uni=uni)
 
 
 @app.route('/reset-password/<secret>', methods=['GET', 'POST'])
@@ -457,7 +460,7 @@ def my_profile():
     if "email" not in session:
         return redirect(url_for('login'))
 
-    uni, team_id, student_full, olinfo, codeforces, topcoder, kattis = get_db().query("""
+    uni, team_id, student_full, olinfo, codeforces, topcoder, kattis, github = get_db().query("""
             SELECT
                 s.university,
                 s.team,
@@ -465,7 +468,8 @@ def my_profile():
                 s.olinfo_handle,
                 s.codeforces_handle,
                 s.topcoder_handle,
-                s.kattis_handle
+                s.kattis_handle,
+                s.github_handle
             FROM students s
             WHERE s.email = :email
         """, {'email': session["email"]}, one=True)
@@ -483,6 +487,7 @@ def my_profile():
         codeforces_handle = StringField('Username on codeforces.com', [validators.Length(max=100)], default=codeforces)
         topcoder_handle = StringField('Username on topcoder.com', [validators.Length(max=100)], default=topcoder)
         kattis_handle = StringField('Username on open.kattis.com', [validators.Length(max=100)], default=kattis)
+        github_handle = StringField('Username on github.com', [validators.Length(max=100)], default=github)
 
     form = EditProfileForm(request.form)
 
@@ -493,12 +498,14 @@ def my_profile():
             'codeforces': form.codeforces_handle.data,
             'topcoder': form.topcoder_handle.data,
             'kattis': form.kattis_handle.data,
+            'github': form.github_handle.data,
         }
 
         get_db().query("""
             UPDATE students SET
                 olinfo_handle = :olinfo, codeforces_handle = :codeforces,
-                topcoder_handle = :topcoder, kattis_handle = :kattis
+                topcoder_handle = :topcoder, kattis_handle = :kattis,
+                github_handle = :github
             WHERE email = :email""", args)
         get_db().commit()
 
