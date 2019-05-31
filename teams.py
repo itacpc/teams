@@ -312,7 +312,7 @@ def reset_password(secret):
 
     if datetime.now() > secret_valid_until:
         flash('The link has expired, you should request a new password reset.')
-        return redirect(url_for('forgot'))
+        return redirect(url_for('login'))
 
     if request.method == 'POST' and form.validate():
         pw_hash = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
@@ -452,13 +452,20 @@ def join_team(uni, secret):
         return render_template('team-join.html', uni=uni, student_full=student_full, message=message)
 
 
-@app.route('/my-profile')
+@app.route('/my-profile', methods=["GET", "POST"])
 def my_profile():
     if "email" not in session:
         return redirect(url_for('login'))
 
-    uni, team_id, student_full = get_db().query("""
-            SELECT s.university, s.team, s.first_name || ' ' || s.last_name
+    uni, team_id, student_full, olinfo, codeforces, topcoder, kattis = get_db().query("""
+            SELECT
+                s.university,
+                s.team,
+                s.first_name || ' ' || s.last_name,
+                s.olinfo_handle,
+                s.codeforces_handle,
+                s.topcoder_handle,
+                s.kattis_handle
             FROM students s
             WHERE s.email = :email
         """, {'email': session["email"]}, one=True)
@@ -471,8 +478,34 @@ def my_profile():
         team_name, team_secret = None, None
         team_members = []
 
-    return render_template('my-profile.html', uni=uni, team_name=team_name, student_full=student_full,
-                           team_members=team_members, secret=team_secret)
+    class EditProfileForm(Form):
+        olinfo_handle = StringField('Username on training.olinfo.it', [validators.Length(max=100)], default=olinfo)
+        codeforces_handle = StringField('Username on codeforces.com', [validators.Length(max=100)], default=codeforces)
+        topcoder_handle = StringField('Username on topcoder.com', [validators.Length(max=100)], default=topcoder)
+        kattis_handle = StringField('Username on open.kattis.com', [validators.Length(max=100)], default=kattis)
+
+    form = EditProfileForm(request.form)
+
+    if request.method == "POST" and form.validate():
+        args = {
+            'email': session["email"],
+            'olinfo': form.olinfo_handle.data,
+            'codeforces': form.codeforces_handle.data,
+            'topcoder': form.topcoder_handle.data,
+            'kattis': form.kattis_handle.data,
+        }
+
+        get_db().query("""
+            UPDATE students SET
+                olinfo_handle = :olinfo, codeforces_handle = :codeforces,
+                topcoder_handle = :topcoder, kattis_handle = :kattis
+            WHERE email = :email""", args)
+        get_db().commit()
+
+        flash('Information was updated successfully!')
+
+    return render_template('my-profile.html', form=form, email=session["email"], uni=uni, team_name=team_name,
+                            student_full=student_full, team_members=team_members, secret=team_secret)
 
 
 @app.route('/leave-team', methods=['GET', 'POST'])

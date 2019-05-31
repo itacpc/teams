@@ -31,4 +31,26 @@
         </div>
     </div>
   </div>
+
+  <div class="card">
+    <div class="card-info">
+        <div>
+            If you need to, here you can update your information:
+
+            {% from "_formhelpers.html" import render_field %}
+            <form method=post>
+              <dl>
+                <dt>Email Address
+                <dd><strong>{{ email }}</strong></dd>
+            
+                {{ render_field(form.olinfo_handle) }}
+                {{ render_field(form.codeforces_handle) }}
+                {{ render_field(form.topcoder_handle) }}
+                {{ render_field(form.kattis_handle) }}
+              </dl>
+              <p><input type="submit" value="Update profile">
+            </form>
+        </div>
+    </div>
+  </div>
 {% endblock %}
