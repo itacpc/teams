@@ -576,7 +576,7 @@ def forgot():
             else:
                 flash('You should wait about %d hours before another request' % ((timedelta(days=1) - elapsed) // timedelta(hours=1)))
         except TypeError:
-            flash("Wrong email or password!")
+            flash("Email not found!")
 
     return render_template('forgot.html', form=form)
 
