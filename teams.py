@@ -310,7 +310,7 @@ def reset_password(secret):
     form = ResetPasswordForm(request.form)
 
     if request.method == 'POST' and form.validate():
-        if datetime.utcnow() - secret_creation_date > timedelta(days=1):
+        if datetime.now() - secret_creation_date > timedelta(days=1):
             flash('The link has expired, you should request a new password reset.')
         pw_hash = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
 
@@ -563,7 +563,7 @@ def forgot():
 
             secret_creation_date, = get_db().query("SELECT secret_creation_date FROM students WHERE email = :email", args, one=True)
 
-            elapsed = datetime.utcnow() - secret_creation_date
+            elapsed = datetime.now() - secret_creation_date
             if elapsed > timedelta(days=1):
                 get_db().query(
                     "UPDATE students set secret = :secret, secret_creation_date = current_timestamp WHERE email = :email",
