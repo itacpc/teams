@@ -27,7 +27,7 @@ create table students(
     olinfo_handle text,
     topcoder_handle text,
     secret text not null unique,
-    secret_creation_date timestamp,
+    secret_valid_until timestamp,
     creation_date timestamp not null default current_timestamp,
     foreign key(university) references universities(id),
     foreign key(team) references teams(id),

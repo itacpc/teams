@@ -26,12 +26,14 @@
                         <ul>
                             {% for s in g %}
                             <li>
-                                <i>{{ (s[0] + " " + s[1]).title() }}</i>
+                                <i>{{ s[0] + " " + s[1] }}</i>
                                 ({% if s[2] %}<a href="https://training.olinfo.it/#/user/{{ s[2] }}/profile">oli</a>{% else %}oli{% endif %}
                                 &bullet;
                                 {% if s[3] %}<a href="https://codeforces.com/profile/{{ s[3] }}">cf</a>{% else %}cf{% endif %}
                                 &bullet;
-                                {% if s[4] %}<a href="https://www.topcoder.com/members/{{ s[4] }}">tc</a>{% else %}tc{% endif %})
+                                {% if s[4] %}<a href="https://www.topcoder.com/members/{{ s[4] }}">tc</a>{% else %}tc{% endif %}
+                                &bullet;
+                                {% if s[5] %}<a href="https://open.kattis.com/users/{{ s[5] }}">ka</a>{% else %}ka{% endif %})
                             </li>
                             {% endfor %}
                         </ul>
@@ -55,7 +57,9 @@
                         &bullet;
                         {% if s[3] %}<a href="https://codeforces.com/profile/{{ s[3] }}">cf</a>{% else %}cf{% endif %}
                         &bullet;
-                        {% if s[4] %}<a href="https://www.topcoder.com/members/{{ s[4] }}">tc</a>{% else %}tc{% endif %})
+                        {% if s[4] %}<a href="https://www.topcoder.com/members/{{ s[4] }}">tc</a>{% else %}tc{% endif %}
+                        &bullet;
+                        {% if s[5] %}<a href="https://open.kattis.com/users/{{ s[5] }}">ka</a>{% else %}ka{% endif %})
                     </li>
                     {% else %}
                     <li style="color: red">

@@ -20,6 +20,7 @@ bcrypt = Bcrypt(app)
 
 MAX_MEMBERS = 3
 GENERATED_SECRET_LENGTH = 30
+RESET_PASSWORD_INTERVAL = timedelta(days=1)
 
 
 class Database:
@@ -178,7 +179,7 @@ def uni_page(uni):
     """, args)
 
     students_left = get_db().query("""
-        SELECT first_name, last_name, olinfo_handle, codeforces_handle, topcoder_handle
+        SELECT first_name, last_name, olinfo_handle, codeforces_handle, topcoder_handle, kattis_handle
         FROM students
         WHERE confirmed AND team IS NULL AND university = :uni
     """, args)
@@ -251,9 +252,9 @@ def new_student(uni):
 
 @app.route('/confirm-email/<secret>', methods=['GET', 'POST'])
 def confirm_email(secret):
-    student = get_db().query("SELECT id, email, first_name || ' ' || last_name, university FROM students WHERE secret = :secret", {'secret': secret}, one=True)
-
-    if student is None:
+    try:
+        student_id, student_email, student_full, uni = get_db().query("SELECT id, email, first_name || ' ' || last_name, university FROM students WHERE secret = :secret", {'secret': secret}, one=True)
+    except TypeError:
         return "The URL looks wrong, did you copy and paste it correctly?", 400
 
     class ConfirmForm(Form):
@@ -274,7 +275,7 @@ def confirm_email(secret):
         pw_hash = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
 
         args = {
-            'id': student[0],
+            'id': student_id,
             'pw_hash': pw_hash,
             'olinfo': form.olinfo_handle.data or None,
             'codeforces': form.codeforces_handle.data or None,
@@ -290,13 +291,13 @@ def confirm_email(secret):
         flash("Account confirmed!")
         return redirect(url_for('login'))
 
-    return render_template('confirm_email.html', form=form, email=student[1], student_full=student[2], uni=student[3])
+    return render_template('confirm_email.html', form=form, email=student_email, student_full=student_full, uni=student_full)
 
 
 @app.route('/reset-password/<secret>', methods=['GET', 'POST'])
 def reset_password(secret):
     try:
-        student_id, student_email, student_full, uni, secret_creation_date = get_db().query("SELECT id, email, first_name || ' ' || last_name, university, secret_creation_date FROM students WHERE secret = :secret", {'secret': secret}, one=True)
+        student_id, student_email, student_full, uni, secret_valid_until = get_db().query("SELECT id, email, first_name || ' ' || last_name, university, secret_valid_until FROM students WHERE secret = :secret", {'secret': secret}, one=True)
     except TypeError:
         return "The URL looks wrong, did you copy and paste it correctly?", 400
 
@@ -309,9 +310,11 @@ def reset_password(secret):
 
     form = ResetPasswordForm(request.form)
 
+    if datetime.now() > secret_valid_until:
+        flash('The link has expired, you should request a new password reset.')
+        return redirect(url_for('forgot'))
+
     if request.method == 'POST' and form.validate():
-        if datetime.now() - secret_creation_date > timedelta(days=1):
-            flash('The link has expired, you should request a new password reset.')
         pw_hash = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
 
         args = {
@@ -319,7 +322,8 @@ def reset_password(secret):
             'pw_hash': pw_hash,
         }
         get_db().query("""UPDATE students SET
-            password = :pw_hash
+            password = :pw_hash,
+            secret_valid_until = current_timestamp
             WHERE id = :id""", args)
         get_db().commit()
         flash("Password reset was successful!")
@@ -489,6 +493,7 @@ def leave_team():
             {'student_id': student_id, 'team_id': team_id, 'joining': False}
         )
 
+        # Reset team secret for additional security
         get_db().query(
             "UPDATE teams SET secret = :secret WHERE id = :team_id",
             {'secret': get_new_secret(), 'team_id': team_id}
@@ -496,7 +501,7 @@ def leave_team():
 
         get_db().commit()
 
-        # remove team from session
+        # Remove team from session
         session.pop("team", None)
 
         return redirect(url_for('my_profile'))
@@ -556,17 +561,18 @@ def forgot():
     form = ForgotPasswordForm(request.form)
 
     if request.method == 'POST' and form.validate():
-        args = {'email': form.email.data.lower()}
+        args = {
+            'email': form.email.data.lower(),
+            'validity': datetime.now() + RESET_PASSWORD_INTERVAL,
+            'secret': get_new_secret()
+        }
 
         try:
-            args['secret'] = get_new_secret()
+            secret_valid_until, = get_db().query("SELECT secret_valid_until FROM students WHERE email = :email", args, one=True)
 
-            secret_creation_date, = get_db().query("SELECT secret_creation_date FROM students WHERE email = :email", args, one=True)
-
-            elapsed = datetime.now() - secret_creation_date
-            if elapsed > timedelta(days=1):
+            if datetime.now() > secret_valid_until:
                 get_db().query(
-                    "UPDATE students set secret = :secret, secret_creation_date = current_timestamp WHERE email = :email",
+                    "UPDATE students set secret = :secret, secret_valid_until = :validity WHERE email = :email",
                     args)
                 get_db().commit()
 
@@ -574,7 +580,8 @@ def forgot():
 
                 flash('Done! Check you inbox (also the spam folder!) for the password reset link.')
             else:
-                flash('You should wait about %d hours before another request' % ((timedelta(days=1) - elapsed) // timedelta(hours=1)))
+                left = secret_valid_until - datetime.now()
+                flash('You should wait about %d hours before another request' % (left // timedelta(hours=1)))
         except TypeError:
             flash("Email not found!")
 
