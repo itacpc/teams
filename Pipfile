@@ -13,6 +13,8 @@ flask-bcrypt = "*"
 flask-sqlalchemy = "*"
 uwsgi = "*"
 psycopg2-binary = "*"
+wheel = "*"
+sendgrid = "*"
 
 [requires]
 python_version = "3.7"

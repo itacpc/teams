@@ -1,6 +1,5 @@
 import sys
 import random
-import smtplib
 import ssl
 import string
 
@@ -12,6 +11,9 @@ from datetime import datetime, timedelta
 
 from flask import flash, Flask, g, redirect, render_template, request, session, url_for
 from flask_bcrypt import Bcrypt
+
+from sendgrid import SendGridAPIClient
+from sendgrid.helpers.mail import Mail
 
 app = Flask(__name__)
 app.config.from_pyfile('config.py')
@@ -61,26 +63,28 @@ def get_new_secret(length=None):
     return ''.join(random.choice(letters) for _ in range(length))
 
 
-def send_email(receiver_email, email_template, **template_args):
+def send_email(receiver_email, email_template, subject, **template_args):
     sender_email = "noreply@itacpc.it"
-    message = render_template(email_template, receiver_email=receiver_email, **template_args)
+    message = render_template(email_template, **template_args)
 
     if app.debug:
         print(f"[would send this email to {receiver_email}]:", file=sys.stderr)
         print(message, file=sys.stderr)
     else:
-        with smtplib.SMTP_SSL(app.config['SMTP_SERVER'], app.config['SMTP_PORT'],
-                              context=ssl.create_default_context()) as server:
-            server.login(app.config['SMTP_USER'], app.config['SMTP_PASSWORD'])
-            server.sendmail(sender_email, receiver_email, message)
-
+        mail = Mail(
+            from_email=(sender_email, 'ITACPC'),
+            to_emails=receiver_email,
+            subject=subject,
+            html_content=message)
+        sg = SendGridAPIClient(app.config['SENDGRID_API_KEY'])
+        response = sg.send(mail)
 
 def send_confirmation_email(receiver_email, secret):
-    send_email(receiver_email, 'email_registration_confirm.jinja2', secret=secret)
+    send_email(receiver_email, 'email_registration_confirm.jinja2', 'Comfirm Registration to ITACPC', secret=secret)
 
 
 def send_forgot_password_email(receiver_email, secret):
-    send_email(receiver_email, 'email_forgot_password.jinja2', secret=secret)
+    send_email(receiver_email, 'email_forgot_password.jinja2', 'ITACPC Account Recovery', secret=secret)
 
 
 @app.teardown_appcontext
@@ -239,8 +243,8 @@ def new_student(uni):
 
             get_db().commit()
 
-        except smtplib.SMTPRecipientsRefused:
-            return "Email address is invalid", 400
+        #except smtplib.SMTPRecipientsRefused:
+        #    return "Email address is invalid", 400
 
         except sqlalchemy.exc.IntegrityError:
             return "Email address already in use", 409
@@ -610,7 +614,7 @@ def forgot():
         try:
             secret_valid_until, = get_db().query("SELECT secret_valid_until FROM students WHERE email = :email", args, one=True)
 
-            if datetime.now() > secret_valid_until:
+            if secret_valid_until is None or datetime.now() > secret_valid_until:
                 get_db().query(
                     "UPDATE students set secret = :secret, secret_valid_until = :validity WHERE email = :email",
                     args)
