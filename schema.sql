@@ -22,6 +22,7 @@ create table students(
     university text not null,
     team integer,
     confirmed boolean default FALSE,
+    subscribed boolean default TRUE,
     codeforces_handle text,
     kattis_handle text,
     olinfo_handle text,

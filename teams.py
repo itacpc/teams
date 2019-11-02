@@ -145,7 +145,7 @@ def index():
     return render_template("home.html", unis=unis, team_count=team_count, students_count=students_count)
 
 
-from wtforms import Form, StringField, PasswordField, SubmitField, validators
+from wtforms import Form, BooleanField, StringField, PasswordField, SubmitField, validators
 
 
 class DomainValidator:
@@ -464,11 +464,12 @@ def my_profile():
     if "email" not in session:
         return redirect(url_for('login'))
 
-    uni, team_id, student_full, olinfo, codeforces, topcoder, kattis, github = get_db().query("""
+    uni, team_id, student_full, subscribed, olinfo, codeforces, topcoder, kattis, github = get_db().query("""
             SELECT
                 s.university,
                 s.team,
                 s.first_name || ' ' || s.last_name,
+                s.subscribed,
                 s.olinfo_handle,
                 s.codeforces_handle,
                 s.topcoder_handle,
@@ -487,6 +488,7 @@ def my_profile():
         team_members = []
 
     class EditProfileForm(Form):
+        subscribed_option = BooleanField('Receive emails for upcoming contests?', default=subscribed)
         olinfo_handle = StringField('Username on training.olinfo.it', [validators.Length(max=100)], default=olinfo)
         codeforces_handle = StringField('Username on codeforces.com', [validators.Length(max=100)], default=codeforces)
         topcoder_handle = StringField('Username on topcoder.com', [validators.Length(max=100)], default=topcoder)
@@ -498,6 +500,7 @@ def my_profile():
     if request.method == "POST" and form.validate():
         args = {
             'email': session["email"],
+            'subscribed': form.subscribed_option.data,
             'olinfo': form.olinfo_handle.data,
             'codeforces': form.codeforces_handle.data,
             'topcoder': form.topcoder_handle.data,
@@ -507,6 +510,7 @@ def my_profile():
 
         get_db().query("""
             UPDATE students SET
+                subscribed = :subscribed,
                 olinfo_handle = :olinfo, codeforces_handle = :codeforces,
                 topcoder_handle = :topcoder, kattis_handle = :kattis,
                 github_handle = :github
