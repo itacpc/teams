@@ -44,7 +44,7 @@
                 <dd><strong>{{ email }}</strong></dd>
             
                 <dt>{{ form.subscribed_option.label }}</dt>
-                <dd>{{ form.subscribed_option }}</dd>
+                <dd>{{ form.subscribed_option(checked=initial_subscribed_value) }}</dd>
 
                 {{ render_field(form.olinfo_handle) }}
                 {{ render_field(form.codeforces_handle) }}

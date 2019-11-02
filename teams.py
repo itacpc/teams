@@ -488,7 +488,7 @@ def my_profile():
         team_members = []
 
     class EditProfileForm(Form):
-        subscribed_option = BooleanField('Receive emails for upcoming contests?', default=subscribed)
+        subscribed_option = BooleanField('Receive emails for upcoming contests?', default="checked")
         olinfo_handle = StringField('Username on training.olinfo.it', [validators.Length(max=100)], default=olinfo)
         codeforces_handle = StringField('Username on codeforces.com', [validators.Length(max=100)], default=codeforces)
         topcoder_handle = StringField('Username on topcoder.com', [validators.Length(max=100)], default=topcoder)
@@ -520,7 +520,8 @@ def my_profile():
         flash('Information was updated successfully!')
 
     return render_template('my-profile.html', form=form, email=session["email"], uni=uni, team_name=team_name,
-                            student_full=student_full, team_members=team_members, secret=team_secret)
+                           student_full=student_full, team_members=team_members, secret=team_secret,
+                           initial_subscribed_value=subscribed)
 
 
 @app.route('/leave-team', methods=['GET', 'POST'])
