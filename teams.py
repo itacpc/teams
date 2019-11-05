@@ -364,7 +364,7 @@ def new_team(uni):
 
         student_id, = get_db().query(
             "SELECT id FROM students WHERE email = :email",
-            {'email': session["email"]}, one=True
+            {'email': session["email"].lower()}, one=True
         )
 
         team_id, = get_db().query("""
@@ -397,7 +397,7 @@ def join_team(uni, secret):
     if "email" not in session:
         return redirect(url_for('login'))
 
-    student_full, = get_db().query("SELECT first_name || ' ' || last_name FROM students WHERE email = :email", {'email': session["email"]}, one=True)
+    student_full, = get_db().query("SELECT first_name || ' ' || last_name FROM students WHERE email = :email", {'email': session["email"].lower()}, one=True)
 
     try:
         team_id, university = get_db().query("SELECT id, university FROM teams WHERE secret = :secret", {'secret': secret}, one=True)
@@ -417,7 +417,7 @@ def join_team(uni, secret):
         return render_template("team-join-confirm.html", uni=uni, student_full=student_full)
 
     elif request.method == "POST":
-        current_team, = get_db().query("SELECT team FROM students WHERE email = :email", {'email': session["email"]}, one=True)
+        current_team, = get_db().query("SELECT team FROM students WHERE email = :email", {'email': session["email"].lower()}, one=True)
 
         if current_team is None:
             current_members, = get_db().query(
@@ -431,7 +431,7 @@ def join_team(uni, secret):
             else:
                 student_id, = get_db().query(
                     "SELECT id FROM students WHERE email = :email",
-                    {'email': session["email"]},
+                    {'email': session["email"].lower()},
                     one=True
                 )
 
@@ -477,7 +477,7 @@ def my_profile():
                 s.github_handle
             FROM students s
             WHERE s.email = :email
-        """, {'email': session["email"]}, one=True)
+        """, {'email': session["email"].lower()}, one=True)
 
     if team_id is not None:
         args = {'team_id': team_id}
@@ -499,7 +499,7 @@ def my_profile():
 
     if request.method == "POST" and form.validate():
         args = {
-            'email': session["email"],
+            'email': session["email"].lower(),
             'subscribed': form.subscribed_option.data,
             'olinfo': form.olinfo_handle.data,
             'codeforces': form.codeforces_handle.data,
@@ -529,7 +529,7 @@ def leave_team():
     if "email" not in session:
         return redirect(url_for('login'))
 
-    args = {'email': session["email"]}
+    args = {'email': session["email"].lower()}
     student_full, = get_db().query("SELECT first_name || ' ' || last_name FROM students WHERE email = :email", args, one=True)
     uni, team_id = get_db().query("SELECT university, team FROM students WHERE email = :email", args, one=True)
 
@@ -583,7 +583,7 @@ def login():
             if not confirmed:
                 flash("You should first confirm your email address")
             elif bcrypt.check_password_hash(pw_hash.encode('utf-8'), form.password.data):
-                session['email'] = request.form['email']
+                session['email'] = args['email']
                 session['university'] = university
                 if team is not None:
                     session['team'] = team
