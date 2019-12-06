@@ -617,7 +617,11 @@ def forgot():
         }
 
         try:
-            secret_valid_until, = get_db().query("SELECT secret_valid_until FROM students WHERE email = :email", args, one=True)
+            secret_valid_until, confirmed = get_db().query("SELECT secret_valid_until, confirmed FROM students WHERE email = :email", args, one=True)
+
+            if not confirmed:
+                flash("You need to confirm your email first!")
+                return redirect(url_for("index"))
 
             if secret_valid_until is None or datetime.now() > secret_valid_until:
                 get_db().query(
