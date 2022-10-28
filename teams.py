@@ -1,3 +1,4 @@
+import json
 import sys
 import random
 import ssl
@@ -481,10 +482,10 @@ def my_profile():
 
     if team_id is not None:
         args = {'team_id': team_id}
-        team_name, team_secret = get_db().query("SELECT name, secret FROM teams WHERE id = :team_id", args, one=True)
+        team_name, team_secret, team_credentials = get_db().query("SELECT name, secret, credentials FROM teams WHERE id = :team_id", args, one=True)
         team_members = get_db().query("SELECT first_name || ' ' || last_name FROM students WHERE team = :team_id", args)
     else:
-        team_name, team_secret = None, None
+        team_name, team_secret, team_credentials = None, None, None
         team_members = []
 
     class EditProfileForm(Form):
@@ -521,6 +522,7 @@ def my_profile():
 
     return render_template('my-profile.html', form=form, email=session["email"], uni=uni, team_name=team_name,
                            student_full=student_full, team_members=team_members, secret=team_secret,
+                           team_credentials=team_credentials,
                            initial_subscribed_value=subscribed)
 
 

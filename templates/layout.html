@@ -19,18 +19,42 @@
       background-color: rgb(164, 223, 255);
     }
 
+    .large-font {
+      font-size: large;
+    }
+
+    .large-font code {
+      font-size: larger;
+    }
+
     .card-container {
-      display: flex;
-      flex-wrap: wrap;
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr 1fr;
 
       margin-top: 0.5rem;
+    }
+
+    @media (max-width: 1700px) {
+      .card-container {
+        grid-template-columns: 1fr 1fr 1fr;
+      }
+    }
+
+    @media (max-width: 1200px) {
+      .card-container {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    @media (max-width: 700px) {
+      .card-container {
+        grid-template-columns: 1fr;
+      }
     }
 
     .card {
       display: flex;
       align-items: flex-start;
-      flex: 1 0 26%;
-      flex-grow: 1;
 
       padding: 1rem;
       border: 1px solid gray;
@@ -47,6 +71,10 @@
 
     .card-info > a {
       margin-top: 0.5rem;
+    }
+    
+    .card-info > h2 {
+      margin-bottom: 8px;
     }
 
     .card-picture {
@@ -76,9 +104,12 @@
 
     header {
       display: flex;
+      flex-direction: column;
     }
 
     .userbar {
+      max-width: 200px;
+      align-self: flex-end;
       padding: 0.3rem 2rem;
       background-color: white;
       margin-left: 1rem;
@@ -95,6 +126,8 @@
     }
 
     .nav {
+      display: flex;
+      justify-content: space-between;
       height: 55px;
       width: 100%;
       background-color: #ffffff;
@@ -118,8 +151,7 @@
     }
 
     .nav > .nav-links {
-      display: inline;
-      float: right;
+      overflow-x: scroll;
       font-size: 18px;
       font-family: Bitter;
     }
@@ -144,7 +176,7 @@
       display: none;
     }
 
-    @media (max-width:600px) {
+    @media (max-width: 900px) {
       .nav > .nav-btn {
         display: inline-block;
         position: absolute;

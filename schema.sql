@@ -10,6 +10,7 @@ create table teams(
     university text not null,
     secret text not null unique,
     creation_date timestamp not null default current_timestamp,
+    credentials json,
     foreign key(university) references universities(id)
 );
 
