@@ -27,7 +27,6 @@ create table students(
     codeforces_handle text,
     kattis_handle text,
     olinfo_handle text,
-    topcoder_handle text,
     github_handle text,
     secret text not null unique,
     secret_valid_until timestamp,

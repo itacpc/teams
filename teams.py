@@ -177,14 +177,14 @@ def uni_page(uni):
     """, args)
 
     students = get_db().query("""
-        SELECT team, first_name, last_name, olinfo_handle, codeforces_handle, topcoder_handle, kattis_handle, github_handle
+        SELECT team, first_name, last_name, olinfo_handle, codeforces_handle, kattis_handle, github_handle
         FROM students
         WHERE confirmed AND team IS NOT NULL AND university = :uni
         ORDER BY 1, 2, 3
     """, args)
 
     students_left = get_db().query("""
-        SELECT first_name, last_name, olinfo_handle, codeforces_handle, topcoder_handle, kattis_handle, github_handle
+        SELECT first_name, last_name, olinfo_handle, codeforces_handle, kattis_handle, github_handle
         FROM students
         WHERE confirmed AND team IS NULL AND university = :uni
     """, args)
@@ -271,7 +271,6 @@ def confirm_email(secret):
 
         olinfo_handle = StringField('(Optional) Your username on training.olinfo.it', [validators.Length(max=100)])
         codeforces_handle = StringField('(Optional) Your username on codeforces.com', [validators.Length(max=100)])
-        topcoder_handle = StringField('(Optional) Your username on topcoder.com', [validators.Length(max=100)])
         kattis_handle = StringField('(Optional) Your username on open.kattis.com', [validators.Length(max=100)])
         github_handle = StringField('(Optional) Your username on github.com', [validators.Length(max=100)])
 
@@ -285,14 +284,14 @@ def confirm_email(secret):
             'pw_hash': pw_hash,
             'olinfo': form.olinfo_handle.data or None,
             'codeforces': form.codeforces_handle.data or None,
-            'topcoder': form.topcoder_handle.data or None,
             'kattis': form.kattis_handle.data or None,
             'github': form.github_handle.data or None,
         }
         get_db().query("""UPDATE students SET
             confirmed = TRUE, password = :pw_hash,
-            olinfo_handle = :olinfo, codeforces_handle = :codeforces,
-            topcoder_handle = :topcoder, kattis_handle = :kattis,
+            olinfo_handle = :olinfo,
+            codeforces_handle = :codeforces,
+            kattis_handle = :kattis,
             github_handle = :github
             WHERE id = :id""", args)
         get_db().commit()
@@ -465,7 +464,7 @@ def my_profile():
     if "email" not in session:
         return redirect(url_for('login'))
 
-    uni, team_id, student_full, subscribed, olinfo, codeforces, topcoder, kattis, github = get_db().query("""
+    uni, team_id, student_full, subscribed, olinfo, codeforces, kattis, github = get_db().query("""
             SELECT
                 s.university,
                 s.team,
@@ -473,7 +472,6 @@ def my_profile():
                 s.subscribed,
                 s.olinfo_handle,
                 s.codeforces_handle,
-                s.topcoder_handle,
                 s.kattis_handle,
                 s.github_handle
             FROM students s
@@ -492,7 +490,6 @@ def my_profile():
         subscribed_option = BooleanField('Receive emails for upcoming contests?', default="checked")
         olinfo_handle = StringField('Username on training.olinfo.it', [validators.Length(max=100)], default=olinfo)
         codeforces_handle = StringField('Username on codeforces.com', [validators.Length(max=100)], default=codeforces)
-        topcoder_handle = StringField('Username on topcoder.com', [validators.Length(max=100)], default=topcoder)
         kattis_handle = StringField('Username on open.kattis.com', [validators.Length(max=100)], default=kattis)
         github_handle = StringField('Username on github.com', [validators.Length(max=100)], default=github)
 
@@ -504,7 +501,6 @@ def my_profile():
             'subscribed': form.subscribed_option.data,
             'olinfo': form.olinfo_handle.data,
             'codeforces': form.codeforces_handle.data,
-            'topcoder': form.topcoder_handle.data,
             'kattis': form.kattis_handle.data,
             'github': form.github_handle.data,
         }
@@ -512,8 +508,9 @@ def my_profile():
         get_db().query("""
             UPDATE students SET
                 subscribed = :subscribed,
-                olinfo_handle = :olinfo, codeforces_handle = :codeforces,
-                topcoder_handle = :topcoder, kattis_handle = :kattis,
+                olinfo_handle = :olinfo,
+                codeforces_handle = :codeforces,
+                kattis_handle = :kattis,
                 github_handle = :github
             WHERE email = :email""", args)
         get_db().commit()
