@@ -17,40 +17,45 @@
 
         <div>
             {% if team_name %}
-                You're part of team <strong>{{ team_name }}</strong> which is currently formed by these students:
+                <p>You're part of team <strong>{{ team_name }}</strong> which is currently formed by these students:</p>
                 <ol>
                     {% for m in team_members %}
                         <li>{{ m[0] }}</li>
                     {% endfor %}
                 </ol>
-                If you want to invite new members (remember that maximum 3 people can be in the same team) you can use the following link:
+                <p>If you want to invite new members (remember that maximum 3 people can be in the same team) you can use the following link:</p>
                 <pre style="font-size: larger">https://teams.itacpc.it/{{ uni }}/join/{{ secret }}</pre>
 
-                If you want to <strong>leave your own team</strong> then <a href="{{ url_for('leave_team') }}">click here</a>.
+                <p>If you want to <strong>leave your own team</strong> then <a href="{{ url_for('leave_team') }}">click here</a>.</p>
             {% else %}
-                Hi {{ student_full }}, you're currently not part of any team. But you can <strong>create</strong> or <strong>join</strong> one!
+                <p>Hi {{ student_full }}, you're currently not part of any team. But you can <strong>create</strong> or <strong>join</strong> one!</p>
             {% endif %}
         </div>
     </div>
   </div>
 
-  <div class="card">
+  <div class="card special">
     <div class="card-info">
       <h2>Contest access credentials</h2>
 
-      {% if team_credentials %}
-        <div>Use the following credentials to access <a href="https://judge.itacpc.it/">the contest</a>.</div>
-        <ul class="large-font">
-          {% for k in ('username', 'password') %}
-            <li>
-              <strong>{{k.title()}}</strong>: <code>{{team_credentials[k]}}</code>
-            </li>
-          {% endfor %}
-        </ul>
-        <div>These credentials will be valid until <strong>{{team_credentials['expiration']}}</strong>, after which they will be disabled.</div>
+      {% if team_name %}
+        {% if team_credentials %}
+          <p>Use the following credentials to access <a href="https://judge.itacpc.it/" target="_blank">the contest</a>.</p>
+          <ul class="large-font">
+            {% for k in ('username', 'password') %}
+              <li>
+                <strong>{{k.title()}}</strong>: <code>{{team_credentials[k]}}</code>
+              </li>
+            {% endfor %}
+          </ul>
+          <p>These credentials will be valid until <strong>{{team_credentials['expiration']}}</strong>, after which they will be disabled.</p>
         {% else %}
-          The credentials to access the contest will appear here some time before the start of the contest. Make sure to check every now and then!
+          <p>The credentials to access <a href="https://judge.itacpc.it/" target="_blank">the contest</a> will appear here some time before the start of the contest.</p>
+          <p style="margin-top: 8px">Make sure to check every now and then!</p>
         {% endif %}
+      {% else %}
+        <p>In order to be assigned credentials to access <a href="https://judge.itacpc.it/" target="_blank">the contest</a> you must first be part of a team.</p>
+      {% endif %}
     </div>
   </div>
 
@@ -59,7 +64,7 @@
         <h2>Update personal information</h2>
 
         <div>
-            If you need to, here you can update your information:
+            <p>If you need to, here you can update your information:</p>
 
             {% from "_formhelpers.html" import render_field %}
             <form method=post>
