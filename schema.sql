@@ -45,8 +45,8 @@ create table teamjoinlog(
 );
 
 insert into universities(id, name, domain) values
-    ('other', 'No university / Foreign university', '*'),
-    ('iuss', 'Istituto Universitario di Studi Superiori', 'iusspavia.it'),
+    -- ('other', 'No university / Foreign university', '*'),
+    -- ('iuss', 'Istituto Universitario di Studi Superiori', 'iusspavia.it'),
     ('luiss', 'Libera Università Internazionale degli Studi Sociali "Guido Carli"', 'luiss.it,luiss.edu'),
     ('poliba', 'Politecnico di Bari', 'poliba.it'),
     ('polimi', 'Politecnico di Milano', 'polimi.it'),
@@ -108,7 +108,7 @@ insert into universities(id, name, domain) values
     ('univr', 'Università degli Studi di Verona', 'univr.it'),
     ('unich', 'Università degli Studi "Gabriele d''Annunzio"', 'unich.it'),
     ('uniroma3', 'Università degli Studi Roma Tre', 'uniroma3.it'),
-    ('iuav', 'Università Iuav di Venezia', 'iuav.it'),
-    ('unistrapg', 'Università per Stranieri di Perugia', 'unistrapg.it'),
-    ('unistrasi', 'Università per Stranieri di Siena', 'unistrasi.it'),
+    -- ('iuav', 'Università Iuav di Venezia', 'iuav.it'),
+    -- ('unistrapg', 'Università per Stranieri di Perugia', 'unistrapg.it'),
+    -- ('unistrasi', 'Università per Stranieri di Siena', 'unistrasi.it'),
     ('univpm', 'Università Politecnica delle Marche', 'univpm.it');
