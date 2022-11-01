@@ -248,7 +248,8 @@ def new_student(uni):
         #    return "Email address is invalid", 400
 
         except sqlalchemy.exc.IntegrityError:
-            return "Email address already in use", 409
+            flash("Email address already in use")
+            return redirect(url_for('new_student', uni=uni))
 
         return render_template('check-inbox.html', uni=uni, email=form.email.data, student_full=form.first_name.data + " " + form.last_name.data)
 
@@ -269,10 +270,10 @@ def confirm_email(secret):
         ])
         confirm = PasswordField('Repeat Password')
 
-        olinfo_handle = StringField('(Optional) Your username on training.olinfo.it', [validators.Length(max=100)])
-        codeforces_handle = StringField('(Optional) Your username on codeforces.com', [validators.Length(max=100)])
-        kattis_handle = StringField('(Optional) Your username on open.kattis.com', [validators.Length(max=100)])
-        github_handle = StringField('(Optional) Your username on github.com', [validators.Length(max=100)])
+        kattis_handle = StringField('Your username on open.kattis.com:', [validators.InputRequired(), validators.Length(max=100)])
+        olinfo_handle = StringField('(Optional) Your username on training.olinfo.it:', [validators.Length(max=100)])
+        codeforces_handle = StringField('(Optional) Your username on codeforces.com:', [validators.Length(max=100)])
+        github_handle = StringField('(Optional) Your username on github.com:', [validators.Length(max=100)])
 
     form = ConfirmForm(request.form)
 
