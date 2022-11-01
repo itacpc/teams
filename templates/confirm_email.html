@@ -31,8 +31,8 @@
 
     <div class="card">
       <div class="card-info">
-        <p>You must have a Kattis account because the contest will take place on Kattis.</p>
-        <p><a href="https://open.kattis.com/login" target="_blank">Create a Kattis account now</a> if you don't have one.</p>
+        <p>The contest will take place on Kattis, so it's recommended to have a Kattis account. You can <a href="https://open.kattis.com/login" target="_blank">create one</a> if you don't have it yet.</p>
+        <p>If you leave this field empty, we will create an account for you and send you the credentials via email.</p>
 
         <dl>
           {{ render_field(form.kattis_handle) }}
@@ -52,7 +52,9 @@
           {{ render_field(form.github_handle) }}
         </dl>
 
-        <input type="submit" value="Confirm account">
+        <div>
+          <input type="submit" value="Confirm account">
+        </div>
       </form>
     </div>
   </div>

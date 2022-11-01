@@ -13,24 +13,24 @@
 
   <div class="card">
     <div class="card-info">
-        <h2>Team membership information</h2>
+      <h2>Team membership information</h2>
 
-        <div>
-            {% if team_name %}
-                <p>You're part of team <strong>{{ team_name }}</strong> which is currently formed by these students:</p>
-                <ol>
-                    {% for m in team_members %}
-                        <li>{{ m[0] }}</li>
-                    {% endfor %}
-                </ol>
-                <p>If you want to invite new members (remember that maximum 3 people can be in the same team) you can use the following link:</p>
-                <pre style="font-size: larger">https://teams.itacpc.it/{{ uni }}/join/{{ secret }}</pre>
+      <div>
+        {% if team_name %}
+          <p>You're part of team <strong>{{ team_name }}</strong> which is currently formed by these students:</p>
+          <ol>
+            {% for m in team_members %}
+              <li>{{ m[0] }}</li>
+            {% endfor %}
+          </ol>
+          <p>If you want to invite new members (remember that maximum 3 people can be in the same team) you can use the following link:</p>
+          <pre style="font-size: larger">https://teams.itacpc.it/{{ uni }}/join/{{ secret }}</pre>
 
-                <p>If you want to <strong>leave your own team</strong> then <a href="{{ url_for('leave_team') }}">click here</a>.</p>
-            {% else %}
-                <p>Hi {{ student_full }}, you're currently not part of any team. But you can <strong>create</strong> or <strong>join</strong> one!</p>
-            {% endif %}
-        </div>
+          <p>If you want to <strong>leave your own team</strong> then <a href="{{ url_for('leave_team') }}">click here</a>.</p>
+        {% else %}
+          <p>Hi {{ student_full }}, you're currently not part of any team. But you can create or join one!</p>
+        {% endif %}
+      </div>
     </div>
   </div>
 
@@ -38,24 +38,22 @@
     <div class="card-info">
       <h2>Contest access credentials</h2>
 
-      {% if team_name %}
-        {% if team_credentials %}
-          <p>Use the following credentials to access <a href="https://judge.itacpc.it/" target="_blank">the contest</a>.</p>
-          <ul class="large-font">
-            {% for k in ('username', 'password') %}
-              <li>
-                <strong>{{k.title()}}</strong>: <code>{{team_credentials[k]}}</code>
-              </li>
-            {% endfor %}
-          </ul>
-          <p>These credentials will be valid until <strong>{{team_credentials['expiration']}}</strong>, after which they will be disabled.</p>
+      <div>
+        {% if team_name %}
+          <p style="margin-bottom: 8px">Great! You're part of a team.</p>
+
+          {% if team_credentials %}
+            <p>The contest is ready. You can now access it <a href="https://itacpc22.kattis.com/" target="_blank">here</a> and login with your Kattis account.</p>
+          {% else %}
+            <p>The contest is not ready yet. Make sure to check here every now and then!</p>
+            <p style="margin-top: 8px">We recommend to make sure that you specify a Kattis username in your profile, since the contest will be hostend on Kattis.</p>
+          {% endif %}
         {% else %}
-          <p>The credentials to access <a href="https://judge.itacpc.it/" target="_blank">the contest</a> will appear here some time before the start of the contest.</p>
-          <p style="margin-top: 8px">Make sure to check every now and then!</p>
+          <p>In order to be included in the contest you <strong>must first be part of a team</strong>.</p>
+
+          <p style="margin-top: 8px">Pss! If you can't find teammates, you can create a team with yourself as the only team member.</p>
         {% endif %}
-      {% else %}
-        <p>In order to be assigned credentials to access <a href="https://judge.itacpc.it/" target="_blank">the contest</a> you must first be part of a team.</p>
-      {% endif %}
+      </div>
     </div>
   </div>
 
@@ -75,9 +73,9 @@
                 <dt>{{ form.subscribed_option.label }}</dt>
                 <dd>{{ form.subscribed_option(checked=initial_subscribed_value) }}</dd>
 
+                {{ render_field(form.kattis_handle) }}
                 {{ render_field(form.olinfo_handle) }}
                 {{ render_field(form.codeforces_handle) }}
-                {{ render_field(form.kattis_handle) }}
                 {{ render_field(form.github_handle) }}
               </dl>
               <p><input type="submit" value="Update profile">

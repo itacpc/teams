@@ -270,7 +270,7 @@ def confirm_email(secret):
         ])
         confirm = PasswordField('Repeat Password')
 
-        kattis_handle = StringField('Your username on open.kattis.com:', [validators.InputRequired(), validators.Length(max=100)])
+        kattis_handle = StringField('Your username on open.kattis.com:', [validators.Length(max=100)])
         olinfo_handle = StringField('(Optional) Your username on training.olinfo.it:', [validators.Length(max=100)])
         codeforces_handle = StringField('(Optional) Your username on codeforces.com:', [validators.Length(max=100)])
         github_handle = StringField('(Optional) Your username on github.com:', [validators.Length(max=100)])
