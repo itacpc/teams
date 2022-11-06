@@ -1,7 +1,7 @@
 {% extends "layout.html" %}
 
 {% block header %}
-There are <strong>{{ (unis | length) - 1 }}</strong>
+There are <strong>{{ (unis | length) - 0 }}</strong>
 universities in the database, <strong>{{ team_count[0] }}</strong> total team
 formed, and <strong>{{ students_count[0] }}</strong> total students registered.
 To search your university, use <strong>CTRL</strong>+<strong>F</strong> or
@@ -14,7 +14,7 @@ a new logo for your university).
   <div class="card-container">
     {% for u in unis %}
     <div class="card {% if session['email'] and session['university'] == u[0] %}special{% endif %}">
-      <img class="card-picture" src="{{ url_for('static', filename='flags/' + u[0] + '.png') }}"/>
+      <img class="card-picture" src="{{ url_for('static', filename='flags/300/' + u[0] + '.png') }}"/>
 
       <div class="card-info">
         <h3>{{ u[1] }}</h3>
