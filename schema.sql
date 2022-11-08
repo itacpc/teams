@@ -69,6 +69,7 @@ insert into universities(id, name, domain) values
     ('unibg', 'Università degli Studi di Bergamo', 'unibg.it'),
     ('unibo', 'Università degli Studi di Bologna', 'unibo.it'),
     ('unibs', 'Università degli Studi di Brescia', 'unibs.it'),
+    ('unibz', 'Libera Università di Bolzano', 'unibz.it'),
     ('unica', 'Università degli Studi di Cagliari', 'unica.it'),
     ('unicam', 'Università degli Studi di Camerino', 'unicam.it'),
     ('unicas', 'Università degli Studi di Cassino e del Lazio Meridionale', 'unicas.it'),
