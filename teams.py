@@ -1,6 +1,8 @@
 import json
 import sys
 import random
+import re
+import requests
 import ssl
 import string
 
@@ -149,6 +151,29 @@ def index():
 from wtforms import Form, BooleanField, StringField, PasswordField, SubmitField, validators
 
 
+def exists_on_kattis_validator(form, field):
+    handle = field.data.rstrip()
+
+    if len(handle) < 1:
+        # The field is not required
+        return
+
+    if not re.match(r"^[a-zA-Z0-9_\-\.]+$", handle):
+        raise validators.ValidationError("The handle is not valid")
+
+    try:
+        req = requests.head(f"https://open.kattis.com/users/{handle}", headers={
+            'User-Agent': 'ITACPC Registration Platform',
+            'From': 'itacpc@olinfo.it'
+        })
+        if req.status_code == 404:
+            raise validators.ValidationError("The handle is not valid!")
+    except validators.ValidationError:
+        raise
+    except Exception as e:
+        # Maybe the request timed out?
+        print(e)
+
 class DomainValidator:
     def __init__(self, domain):
         self.domain = domain
@@ -270,7 +295,7 @@ def confirm_email(secret):
         ])
         confirm = PasswordField('Repeat Password')
 
-        kattis_handle = StringField('Your username on open.kattis.com:', [validators.Length(max=100)])
+        kattis_handle = StringField('Your username on open.kattis.com:', [validators.Length(max=100), exists_on_kattis_validator])
         olinfo_handle = StringField('(Optional) Your username on training.olinfo.it:', [validators.Length(max=100)])
         codeforces_handle = StringField('(Optional) Your username on codeforces.com:', [validators.Length(max=100)])
         github_handle = StringField('(Optional) Your username on github.com:', [validators.Length(max=100)])
@@ -491,7 +516,7 @@ def my_profile():
         subscribed_option = BooleanField('Receive emails for upcoming contests?', default="checked")
         olinfo_handle = StringField('Username on training.olinfo.it', [validators.Length(max=100)], default=olinfo)
         codeforces_handle = StringField('Username on codeforces.com', [validators.Length(max=100)], default=codeforces)
-        kattis_handle = StringField('Username on open.kattis.com', [validators.Length(max=100)], default=kattis)
+        kattis_handle = StringField('Username on open.kattis.com', [validators.Length(max=100), exists_on_kattis_validator], default=kattis)
         github_handle = StringField('Username on github.com', [validators.Length(max=100)], default=github)
 
     form = EditProfileForm(request.form)
