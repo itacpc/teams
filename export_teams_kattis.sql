@@ -3,7 +3,7 @@ CREATE TEMPORARY VIEW kattis_participants AS (
         CONCAT(TRIM(s.first_name), ' ', TRIM(s.last_name)) AS name,
         s.email AS email,
         CASE
-            WHEN t.id IS NULL THEN CONCAT(s.first_name, ' ', s.last_name)
+            WHEN t.id IS NULL THEN CONCAT(TRIM(s.first_name), ' ', TRIM(s.last_name))
             ELSE t.name
         END AS "team-name",
         'CONTESTANT' AS "team-role",
@@ -24,7 +24,7 @@ CREATE TEMPORARY VIEW kattis_participants AS (
 CREATE TEMPORARY VIEW kattis_teams AS (
     SELECT
         CASE
-            WHEN t.id IS NULL THEN CONCAT(s.first_name, ' ', s.last_name)
+            WHEN t.id IS NULL THEN CONCAT(TRIM(s.first_name), ' ', TRIM(s.last_name))
             ELSE t.name
         END AS "team-name",
         u.name AS "site-name",
