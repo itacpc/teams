@@ -23,7 +23,7 @@ CREATE TEMPORARY VIEW kattis_participants AS (
 
 CREATE TEMPORARY VIEW kattis_teams AS (
     SELECT
-        CASE
+        DISTINCT CASE
             WHEN t.id IS NULL THEN CONCAT(TRIM(s.first_name), ' ', TRIM(s.last_name))
             ELSE t.name
         END AS "team-name",
