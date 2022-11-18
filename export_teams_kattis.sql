@@ -18,7 +18,7 @@ CREATE TEMPORARY VIEW kattis_participants AS (
     WHERE
         s.confirmed
     ORDER BY
-        team
+        3, 1
 );
 
 CREATE TEMPORARY VIEW kattis_teams AS (
@@ -40,7 +40,7 @@ CREATE TEMPORARY VIEW kattis_teams AS (
     WHERE
         s.confirmed
     ORDER BY
-        team
+        1
 );
 
 \copy (SELECT * FROM kattis_participants) TO 'kattis-participants.csv' DELIMITER ',' CSV HEADER;
