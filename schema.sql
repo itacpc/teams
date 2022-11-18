@@ -57,7 +57,7 @@ insert into universities(id, name, domain) values
     ('unive', 'Università Ca'' Foscari di Venezia', 'unive.it'),
     ('unibas', 'Università degli Studi della Basilicata', 'unibas.it'),
     ('unical', 'Università degli Studi della Calabria', 'unical.it'),
---     ('unina2', 'Università degli Studi della Campania "Luigi Vanvitelli"', 'unina2.it,unicampania.it'),
+    ('unicampania', 'Università degli Studi della Campania "Luigi Vanvitelli"', 'unicampania.it'),
     ('univaq', 'Università degli Studi dell''Aquila', 'univaq.it'),
     ('unitus', 'Università degli Studi della Tuscia', 'unitus.it'),
     ('uninsubria', 'Università degli Studi dell''Insubria', 'uninsubria.it'),
