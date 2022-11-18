@@ -42,3 +42,6 @@ CREATE TEMPORARY VIEW kattis_teams AS (
     ORDER BY
         team
 );
+
+\copy (SELECT * FROM kattis_participants) TO 'kattis-participants.csv' DELIMITER ',' CSV HEADER;
+\copy (SELECT * FROM kattis_teams) TO 'kattis-teams.csv' DELIMITER ',' CSV HEADER;
