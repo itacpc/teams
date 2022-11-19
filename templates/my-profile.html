@@ -39,20 +39,7 @@
       <h2>Contest access credentials</h2>
 
       <div>
-        {% if team_name %}
-          <p style="margin-bottom: 8px">Great! You're part of a team.</p>
-
-          {% if team_credentials %}
-            <p>The contest is ready. You can now access it <a href="https://itacpc22.kattis.com/" target="_blank">here</a> and login with your Kattis account.</p>
-          {% else %}
-            <p>The contest is not ready yet. Make sure to check here every now and then!</p>
-            <p style="margin-top: 8px">We recommend to make sure that you specify a Kattis username in your profile, since the contest will be hostend on Kattis.</p>
-          {% endif %}
-        {% else %}
-          <p>In order to be included in the contest you <strong>must first be part of a team</strong>.</p>
-
-          <p style="margin-top: 8px">Pss! If you can't find teammates, you can create a team with yourself as the only team member.</p>
-        {% endif %}
+        <p>The contest is ready. You can now access it <a href="https://itacpc22.kattis.com/contests" target="_blank">here</a> and login with your Kattis account.</p>
       </div>
     </div>
   </div>
