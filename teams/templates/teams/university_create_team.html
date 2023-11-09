@@ -1,0 +1,26 @@
+{% extends "teams/base.html" %}
+
+{% block header %}
+{% endblock %}
+
+{% block content %}
+<div class="card">
+    <img class="card-picture" src="{{ university.flag_300 }}">
+    <div class="card-info">
+        Creation of a new team for
+        <h1>{{ university.name }}</h1>
+        <a href="{% url 'index' %}">Back to list of universities</a>
+        <a href="{% url 'university' university.short_name %}">Back to university</a>
+    </div>
+</div>
+
+<div class="card">
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <p>
+            <button type="submit">Create</button>
+        </p>
+    </form>
+</div>
+{% endblock %}

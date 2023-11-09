@@ -1,0 +1,41 @@
+{% extends "teams/base.html" %}
+
+{% block header %}
+{% endblock %}
+
+{% block content %}
+<div class="card">
+    <img class="card-picture" src="{{ university.flag_300 }}">
+    <div class="card-info">
+        Registration of a new student of
+        <h1>{{ university.name }}</h1>
+        <a href="{% url 'index' %}">Back to list of universities</a>
+        <a href="{% url 'university' university.short_name %}">Back to university</a>
+    </div>
+</div>
+
+<div style="font-style: italic; margin-top: 0.5rem; background-color: yellow; display: inline-block;">
+{% if uni_domain %}
+    <strong>WARNING</strong>: your email address should have the following structure:<br>
+
+    {% for dom in uni_domain %}
+        {% if not forloop.first %}
+        <span> or </span>
+        {% endif %}
+        <span style="font-family: monospace;">...@...{{ dom }}</span>
+    {% endfor %}
+{% else %}
+    <strong>WARNING</strong>: you are still welcome to participate while not enrolled in an eligible university, but you won't be eligible for prizes.
+{% endif %}
+</div>
+
+<div class="card">
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <p>
+            <button type="submit">Register</button>
+        </p>
+    </form>
+</div>
+{% endblock %}

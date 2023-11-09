@@ -1,0 +1,26 @@
+{% extends "teams/base.html" %}
+
+{% block header %}
+{% endblock %}
+
+{% block content %}
+<div class="card">
+    <img class="card-picture" src="{{ request.user.team.university.flag_300 }}">
+    <div class="card-info">
+        Hello,
+        <h1>{{ request.user.full_name }}</h1>
+        <a href="{% url 'index' %}">Back to list of universities</a>
+        <a href="{% url 'university' request.user.team.university.short_name %}">Back to university</a>
+    </div>
+</div>
+
+<div class="card">
+  <div class="card-info">
+      <form method=post>
+          {% csrf_token %}
+          <div style="margin-bottom: 1rem">Are you sure you want to leave your current team <strong>{{ request.user.team.name }}</strong>?</div>
+          <input type=submit value="Yes, leave my team">
+      </form>
+  </div>
+</div>
+{% endblock %}

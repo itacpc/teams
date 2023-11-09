@@ -1,0 +1,24 @@
+{% extends "teams/base.html" %}
+
+{% block header %}
+{% endblock %}
+
+{% block content %}
+<div class="card">
+    <img class="card-picture" src="{{ university.flag_300 }}">
+    <div class="card-info">
+        Hello,
+        <h1>{{ student.full_name }}</h1>
+        <a href="{% url 'index' %}">Back to list of universities</a>
+        <a href="{% url 'university' university.short_name %}">Back to university</a>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-info">
+        <div>You signed up successfully!</div>
+  
+        <div style="margin-top: 1rem">Check your inbox (also the spam folder!) at <i>{{ student.user.email }}</i> and click on the link to confirm your account!</div>
+    </div>
+</div>
+{% endblock %}

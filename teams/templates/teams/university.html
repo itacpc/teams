@@ -1,0 +1,79 @@
+{% extends "teams/base.html" %}
+
+{% block header %}
+{% endblock %}
+
+{% block content %}
+<div class="card">
+  <img class="card-picture" src="{{ university.flag_300 }}">
+  <div class="card-info">
+      <h1>{{ university.name }}</h1>
+      <a href="{% url 'index' %}">Back to list of universities</a>
+      {% if user.is_authenticated and not user_own_team %}
+      <a style="background-color: plum;" href="{% url 'create-team' university.short_name %}">Create a new team</a>
+      {% endif %}
+      {% if not user.is_authenticated %}
+      <a style="background-color: lightgreen;" href="{% url 'create-student' university.short_name %}">Register as a new student of this university</a>
+      {% endif %}
+  </div>
+</div>
+<div class="card-container">
+  <div class="card">
+    <div class="card-info">
+        <h3>Teams</h3>
+        <ul>
+            {% for t, g in grouped %}
+            <li>
+                <strong>{{ t.name }}</strong> — {{ g | length }}/3 members
+                <ul>
+                    {% for s in g %}
+                    <li>
+                        <i>{{ s.full_name }}</i>
+                        ({% if s.kattis_handle %}<a href="https://open.kattis.com/users/{{ s.kattis_handle }}">ka</a>{% else %}ka{% endif %}
+                        &bullet;
+                        {% if s.olinfo_handle %}<a href="https://training.olinfo.it/#/user/{{ s.olinfo_handle }}/profile">oli</a>{% else %}oli{% endif %}
+                        &bullet;
+                        {% if s.codeforces_handle %}<a href="https://codeforces.com/profile/{{ s.codeforces_handle }}">cf</a>{% else %}cf{% endif %}
+                        &bullet;
+                        {% if s.github_handle %}<a href="https://github.com/{{ s.github_handle }}">gh</a>{% else %}gh{% endif %})
+                    </li>
+                    {% endfor %}
+                </ul>
+            </li>
+            {% empty %}
+            <li style="color: red">
+                no teams yet
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-info">
+        <h3>Individual participants</h3>
+        <ul class="students-list">
+            {% for s in students_left %}
+            <li>
+                <i>{{ s.full_name }}</i>
+                {% if not s.is_verified %}
+                    <span style="font-size: x-small">(not verified)</span>
+                {% else %}
+                    ({% if s.kattis_handle %}<a href="https://open.kattis.com/users/{{ s.kattis_handle }}">ka</a>{% else %}ka{% endif %}
+                    &bullet;
+                    {% if s.olinfo_handle %}<a href="https://training.olinfo.it/#/user/{{ s.olinfo_handle }}/profile">oli</a>{% else %}oli{% endif %}
+                    &bullet;
+                    {% if s.codeforces_handle %}<a href="https://codeforces.com/profile/{{ s.codeforces_handle }}">cf</a>{% else %}cf{% endif %}
+                    &bullet;
+                    {% if s.github_handle %}<a href="https://github.com/{{ s.github_handle }}">gh</a>{% else %}gh{% endif %})
+                {% endif %}
+            </li>
+            {% empty %}
+            <li style="color: red">
+                no students yet
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+  </div>
+</div>
+{% endblock %}

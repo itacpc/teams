@@ -1,0 +1,750 @@
+[
+{
+    "model": "teams.university",
+    "pk": 1,
+    "fields": {
+        "short_name": "imtlucca",
+        "name": "Scuola IMT Alti Studi Lucca",
+        "domain": "imtlucca.it",
+        "kattis_subdivision": null,
+        "active": false
+    }
+},
+{
+    "model": "teams.university",
+    "pk": 2,
+    "fields": {
+        "short_name": "iuav",
+        "name": "Università Iuav di Venezia",
+        "domain": "iuav.it",
+        "kattis_subdivision": null,
+        "active": false
+    }
+},
+{
+    "model": "teams.university",
+    "pk": 3,
+    "fields": {
+        "short_name": "iuss",
+        "name": "Istituto Universitario di Studi Superiori",
+        "domain": "iusspavia.it",
+        "kattis_subdivision": null,
+        "active": false
+    }
+},
+{
+    "model": "teams.university",
+    "pk": 4,
+    "fields": {
+        "short_name": "other",
+        "name": "No university / Foreign university",
+        "domain": "*",
+        "kattis_subdivision": null,
+        "active": false
+    }
+},
+{
+    "model": "teams.university",
+    "pk": 5,
+    "fields": {
+        "short_name": "unicz",
+        "name": "Università degli Studi di Catanzaro \"Magna Græcia\"",
+        "domain": "unicz.it",
+        "kattis_subdivision": null,
+        "active": false
+    }
+},
+{
+    "model": "teams.university",
+    "pk": 6,
+    "fields": {
+        "short_name": "unifg",
+        "name": "Università degli Studi di Foggia",
+        "domain": "unifg.it",
+        "kattis_subdivision": null,
+        "active": false
+    }
+},
+{
+    "model": "teams.university",
+    "pk": 7,
+    "fields": {
+        "short_name": "unimc",
+        "name": "Università degli Studi di Macerata",
+        "domain": "unimc.it",
+        "kattis_subdivision": null,
+        "active": false
+    }
+},
+{
+    "model": "teams.university",
+    "pk": 8,
+    "fields": {
+        "short_name": "unior",
+        "name": "Università degli Studi di Napoli \"L'Orientale\"",
+        "domain": "unior.it",
+        "kattis_subdivision": null,
+        "active": false
+    }
+},
+{
+    "model": "teams.university",
+    "pk": 9,
+    "fields": {
+        "short_name": "uniroma4",
+        "name": "Università degli Studi di Roma \"Foro Italico\"",
+        "domain": "uniroma4.it",
+        "kattis_subdivision": null,
+        "active": false
+    }
+},
+{
+    "model": "teams.university",
+    "pk": 10,
+    "fields": {
+        "short_name": "unistrapg",
+        "name": "Università per Stranieri di Perugia",
+        "domain": "unistrapg.it",
+        "kattis_subdivision": null,
+        "active": false
+    }
+},
+{
+    "model": "teams.university",
+    "pk": 11,
+    "fields": {
+        "short_name": "unistrasi",
+        "name": "Università per Stranieri di Siena",
+        "domain": "unistrasi.it",
+        "kattis_subdivision": null,
+        "active": false
+    }
+},
+{
+    "model": "teams.university",
+    "pk": 12,
+    "fields": {
+        "short_name": "luiss",
+        "name": "Libera Università Internazionale degli Studi Sociali \"Guido Carli\"",
+        "domain": "luiss.it,luiss.edu",
+        "kattis_subdivision": "IT-62",
+        "active": true
+    }
+},
+{
+    "model": "teams.university",
+    "pk": 13,
+    "fields": {
+        "short_name": "poliba",
+        "name": "Politecnico di Bari",
+        "domain": "poliba.it",
+        "kattis_subdivision": "IT-75",
+        "active": true
+    }
+},
+{
+    "model": "teams.university",
+    "pk": 14,
+    "fields": {
+        "short_name": "polimi",
+        "name": "Politecnico di Milano",
+        "domain": "polimi.it",
+        "kattis_subdivision": "IT-25",
+        "active": true
+    }
+},
+{
+    "model": "teams.university",
+    "pk": 15,
+    "fields": {
+        "short_name": "polito",
+        "name": "Politecnico di Torino",
+        "domain": "polito.it",
+        "kattis_subdivision": "IT-21",
+        "active": true
+    }
+},
+{
+    "model": "teams.university",
+    "pk": 16,
+    "fields": {
+        "short_name": "santanna",
+        "name": "Scuola superiore di studi universitari e di perfezionamento Sant'Anna",
+        "domain": "santannapisa.it",
+        "kattis_subdivision": "IT-52",
+        "active": true
+    }
+},
+{
+    "model": "teams.university",
+    "pk": 17,
+    "fields": {
+        "short_name": "sns",
+        "name": "Scuola Normale Superiore",
+        "domain": "sns.it",
+        "kattis_subdivision": "IT-52",
+        "active": true
+    }
+},
+{
+    "model": "teams.university",
+    "pk": 18,
+    "fields": {
+        "short_name": "uniba",
+        "name": "Università degli Studi di Bari Aldo Moro",
+        "domain": "uniba.it",
+        "kattis_subdivision": "IT-75",
+        "active": true
+    }
+},
+{
+    "model": "teams.university",
+    "pk": 19,
+    "fields": {
+        "short_name": "unibas",
+        "name": "Università degli Studi della Basilicata",
+        "domain": "unibas.it",
+        "kattis_subdivision": "IT-77",
+        "active": true
+    }
+},
+{
+    "model": "teams.university",
+    "pk": 20,
+    "fields": {
+        "short_name": "unibg",
+        "name": "Università degli Studi di Bergamo",
+        "domain": "unibg.it",
+        "kattis_subdivision": "IT-25",
+        "active": true
+    }
+},
+{
+    "model": "teams.university",
+    "pk": 21,
+    "fields": {
+        "short_name": "unibo",
+        "name": "Università degli Studi di Bologna",
+        "domain": "unibo.it",
+        "kattis_subdivision": "IT-45",
+        "active": true
+    }
+},
+{
+    "model": "teams.university",
+    "pk": 22,
+    "fields": {
+        "short_name": "unibs",
+        "name": "Università degli Studi di Brescia",
+        "domain": "unibs.it",
+        "kattis_subdivision": "IT-25",
+        "active": true
+    }
+},
+{
+    "model": "teams.university",
+    "pk": 23,
+    "fields": {
+        "short_name": "unibz",
+        "name": "Libera Università di Bolzano",
+        "domain": "unibz.it",
+        "kattis_subdivision": null,
+        "active": true
+    }
+},
+{
+    "model": "teams.university",
+    "pk": 24,
+    "fields": {
+        "short_name": "unica",
+        "name": "Università degli Studi di Cagliari",
+        "domain": "unica.it",
+        "kattis_subdivision": "IT-88",
+        "active": true
+    }
+},
+{
+    "model": "teams.university",
+    "pk": 25,
+    "fields": {
+        "short_name": "unical",
+        "name": "Università degli Studi della Calabria",
+        "domain": "unical.it",
+        "kattis_subdivision": "IT-78",
+        "active": true
+    }
+},
+{
+    "model": "teams.university",
+    "pk": 26,
+    "fields": {
+        "short_name": "unicam",
+        "name": "Università degli Studi di Camerino",
+        "domain": "unicam.it",
+        "kattis_subdivision": "IT-57",
+        "active": true
+    }
+},
+{
+    "model": "teams.university",
+    "pk": 27,
+    "fields": {
+        "short_name": "unicampania",
+        "name": "Università degli Studi della Campania \"Luigi Vanvitelli\"",
+        "domain": "unicampania.it",
+        "kattis_subdivision": "IT-72",
+        "active": true
+    }
+},
+{
+    "model": "teams.university",
+    "pk": 28,
+    "fields": {
+        "short_name": "unicas",
+        "name": "Università degli Studi di Cassino e del Lazio Meridionale",
+        "domain": "unicas.it",
+        "kattis_subdivision": "IT-62",
+        "active": true
+    }
+},
+{
+    "model": "teams.university",
+    "pk": 29,
+    "fields": {
+        "short_name": "unich",
+        "name": "Università degli Studi \"Gabriele d'Annunzio\"",
+        "domain": "unich.it",
+        "kattis_subdivision": "IT-65",
+        "active": true
+    }
+},
+{
+    "model": "teams.university",
+    "pk": 30,
+    "fields": {
+        "short_name": "unict",
+        "name": "Università degli Studi di Catania",
+        "domain": "unict.it",
+        "kattis_subdivision": "IT-82",
+        "active": true
+    }
+},
+{
+    "model": "teams.university",
+    "pk": 31,
+    "fields": {
+        "short_name": "unife",
+        "name": "Università degli Studi di Ferrara",
+        "domain": "unife.it",
+        "kattis_subdivision": "IT-45",
+        "active": true
+    }
+},
+{
+    "model": "teams.university",
+    "pk": 32,
+    "fields": {
+        "short_name": "unifi",
+        "name": "Università degli Studi di Firenze",
+        "domain": "unifi.it",
+        "kattis_subdivision": "IT-52",
+        "active": true
+    }
+},
+{
+    "model": "teams.university",
+    "pk": 33,
+    "fields": {
+        "short_name": "unige",
+        "name": "Università degli Studi di Genova",
+        "domain": "unige.it",
+        "kattis_subdivision": "IT-42",
+        "active": true
+    }
+},
+{
+    "model": "teams.university",
+    "pk": 34,
+    "fields": {
+        "short_name": "unime",
+        "name": "Università degli Studi di Messina",
+        "domain": "unime.it",
+        "kattis_subdivision": "IT-82",
+        "active": true
+    }
+},
+{
+    "model": "teams.university",
+    "pk": 35,
+    "fields": {
+        "short_name": "unimi",
+        "name": "Università degli Studi di Milano",
+        "domain": "unimi.it",
+        "kattis_subdivision": "IT-25",
+        "active": true
+    }
+},
+{
+    "model": "teams.university",
+    "pk": 36,
+    "fields": {
+        "short_name": "unimib",
+        "name": "Università degli Studi di Milano-Bicocca",
+        "domain": "unimib.it",
+        "kattis_subdivision": "IT-25",
+        "active": true
+    }
+},
+{
+    "model": "teams.university",
+    "pk": 37,
+    "fields": {
+        "short_name": "unimol",
+        "name": "Università degli Studi del Molise",
+        "domain": "unimol.it",
+        "kattis_subdivision": "IT-67",
+        "active": true
+    }
+},
+{
+    "model": "teams.university",
+    "pk": 38,
+    "fields": {
+        "short_name": "unimore",
+        "name": "Università degli Studi di Modena e Reggio Emilia",
+        "domain": "unimore.it",
+        "kattis_subdivision": "IT-45",
+        "active": true
+    }
+},
+{
+    "model": "teams.university",
+    "pk": 39,
+    "fields": {
+        "short_name": "unina",
+        "name": "Università degli Studi di Napoli \"Federico II\"",
+        "domain": "unina.it",
+        "kattis_subdivision": "IT-72",
+        "active": true
+    }
+},
+{
+    "model": "teams.university",
+    "pk": 40,
+    "fields": {
+        "short_name": "uninsubria",
+        "name": "Università degli Studi dell'Insubria",
+        "domain": "uninsubria.it",
+        "kattis_subdivision": "IT-25",
+        "active": true
+    }
+},
+{
+    "model": "teams.university",
+    "pk": 41,
+    "fields": {
+        "short_name": "unipa",
+        "name": "Università degli Studi di Palermo",
+        "domain": "unipa.it",
+        "kattis_subdivision": "IT-82",
+        "active": true
+    }
+},
+{
+    "model": "teams.university",
+    "pk": 42,
+    "fields": {
+        "short_name": "uniparthenope",
+        "name": "Università degli Studi di Napoli \"Parthenope\"",
+        "domain": "uniparthenope.it",
+        "kattis_subdivision": "IT-72",
+        "active": true
+    }
+},
+{
+    "model": "teams.university",
+    "pk": 43,
+    "fields": {
+        "short_name": "unipd",
+        "name": "Università degli Studi di Padova",
+        "domain": "unipd.it",
+        "kattis_subdivision": "IT-34",
+        "active": true
+    }
+},
+{
+    "model": "teams.university",
+    "pk": 44,
+    "fields": {
+        "short_name": "unipg",
+        "name": "Università degli Studi di Perugia",
+        "domain": "unipg.it",
+        "kattis_subdivision": "IT-55",
+        "active": true
+    }
+},
+{
+    "model": "teams.university",
+    "pk": 45,
+    "fields": {
+        "short_name": "unipi",
+        "name": "Università degli Studi di Pisa",
+        "domain": "unipi.it",
+        "kattis_subdivision": "IT-52",
+        "active": true
+    }
+},
+{
+    "model": "teams.university",
+    "pk": 46,
+    "fields": {
+        "short_name": "unipr",
+        "name": "Università degli Studi di Parma",
+        "domain": "unipr.it",
+        "kattis_subdivision": "IT-45",
+        "active": true
+    }
+},
+{
+    "model": "teams.university",
+    "pk": 47,
+    "fields": {
+        "short_name": "unipv",
+        "name": "Università degli Studi di Pavia",
+        "domain": "unipv.it",
+        "kattis_subdivision": "IT-25",
+        "active": true
+    }
+},
+{
+    "model": "teams.university",
+    "pk": 48,
+    "fields": {
+        "short_name": "unirc",
+        "name": "Università degli Studi di Reggio Calabria \"Mediterranea\"",
+        "domain": "unirc.it",
+        "kattis_subdivision": "IT-78",
+        "active": true
+    }
+},
+{
+    "model": "teams.university",
+    "pk": 49,
+    "fields": {
+        "short_name": "uniroma1",
+        "name": "Università degli Studi di Roma \"La Sapienza\"",
+        "domain": "uniroma1.it",
+        "kattis_subdivision": "IT-62",
+        "active": true
+    }
+},
+{
+    "model": "teams.university",
+    "pk": 50,
+    "fields": {
+        "short_name": "uniroma2",
+        "name": "Università degli Studi di Roma Tor Vergata",
+        "domain": "uniroma2.it",
+        "kattis_subdivision": "IT-62",
+        "active": true
+    }
+},
+{
+    "model": "teams.university",
+    "pk": 51,
+    "fields": {
+        "short_name": "uniroma3",
+        "name": "Università degli Studi Roma Tre",
+        "domain": "uniroma3.it",
+        "kattis_subdivision": "IT-62",
+        "active": true
+    }
+},
+{
+    "model": "teams.university",
+    "pk": 52,
+    "fields": {
+        "short_name": "unisa",
+        "name": "Università degli Studi di Salerno",
+        "domain": "unisa.it",
+        "kattis_subdivision": "IT-72",
+        "active": true
+    }
+},
+{
+    "model": "teams.university",
+    "pk": 53,
+    "fields": {
+        "short_name": "unisalento",
+        "name": "Università degli Studi del Salento",
+        "domain": "unisalento.it",
+        "kattis_subdivision": "IT-75",
+        "active": true
+    }
+},
+{
+    "model": "teams.university",
+    "pk": 54,
+    "fields": {
+        "short_name": "unisannio",
+        "name": "Università degli Studi del Sannio",
+        "domain": "unisannio.it",
+        "kattis_subdivision": "IT-72",
+        "active": true
+    }
+},
+{
+    "model": "teams.university",
+    "pk": 55,
+    "fields": {
+        "short_name": "unisi",
+        "name": "Università degli Studi di Siena",
+        "domain": "unisi.it",
+        "kattis_subdivision": "IT-52",
+        "active": true
+    }
+},
+{
+    "model": "teams.university",
+    "pk": 56,
+    "fields": {
+        "short_name": "uniss",
+        "name": "Università degli Studi di Sassari",
+        "domain": "uniss.it",
+        "kattis_subdivision": null,
+        "active": true
+    }
+},
+{
+    "model": "teams.university",
+    "pk": 57,
+    "fields": {
+        "short_name": "unite",
+        "name": "Università degli Studi di Teramo",
+        "domain": "unite.it",
+        "kattis_subdivision": null,
+        "active": true
+    }
+},
+{
+    "model": "teams.university",
+    "pk": 58,
+    "fields": {
+        "short_name": "unitn",
+        "name": "Università degli Studi di Trento",
+        "domain": "unitn.it",
+        "kattis_subdivision": "IT-32",
+        "active": true
+    }
+},
+{
+    "model": "teams.university",
+    "pk": 59,
+    "fields": {
+        "short_name": "unito",
+        "name": "Università degli Studi di Torino",
+        "domain": "unito.it",
+        "kattis_subdivision": "IT-21",
+        "active": true
+    }
+},
+{
+    "model": "teams.university",
+    "pk": 60,
+    "fields": {
+        "short_name": "units",
+        "name": "Università degli Studi di Trieste",
+        "domain": "units.it",
+        "kattis_subdivision": null,
+        "active": true
+    }
+},
+{
+    "model": "teams.university",
+    "pk": 61,
+    "fields": {
+        "short_name": "unitus",
+        "name": "Università degli Studi della Tuscia",
+        "domain": "unitus.it",
+        "kattis_subdivision": null,
+        "active": true
+    }
+},
+{
+    "model": "teams.university",
+    "pk": 62,
+    "fields": {
+        "short_name": "uniud",
+        "name": "Università degli Studi di Udine",
+        "domain": "uniud.it",
+        "kattis_subdivision": "IT-36",
+        "active": true
+    }
+},
+{
+    "model": "teams.university",
+    "pk": 63,
+    "fields": {
+        "short_name": "uniupo",
+        "name": "Università degli Studi del Piemonte Orientale \"Amedeo Avogadro\"",
+        "domain": "uniupo.it",
+        "kattis_subdivision": "IT-21",
+        "active": true
+    }
+},
+{
+    "model": "teams.university",
+    "pk": 64,
+    "fields": {
+        "short_name": "uniurb",
+        "name": "Università degli Studi di Urbino \"Carlo Bo\"",
+        "domain": "uniurb.it",
+        "kattis_subdivision": null,
+        "active": true
+    }
+},
+{
+    "model": "teams.university",
+    "pk": 65,
+    "fields": {
+        "short_name": "univaq",
+        "name": "Università degli Studi dell'Aquila",
+        "domain": "univaq.it",
+        "kattis_subdivision": "IT-65",
+        "active": true
+    }
+},
+{
+    "model": "teams.university",
+    "pk": 66,
+    "fields": {
+        "short_name": "unive",
+        "name": "Università Ca' Foscari di Venezia",
+        "domain": "unive.it",
+        "kattis_subdivision": "IT-34",
+        "active": true
+    }
+},
+{
+    "model": "teams.university",
+    "pk": 67,
+    "fields": {
+        "short_name": "univpm",
+        "name": "Università Politecnica delle Marche",
+        "domain": "univpm.it",
+        "kattis_subdivision": "IT-57",
+        "active": true
+    }
+},
+{
+    "model": "teams.university",
+    "pk": 68,
+    "fields": {
+        "short_name": "univr",
+        "name": "Università degli Studi di Verona",
+        "domain": "univr.it",
+        "kattis_subdivision": "IT-34",
+        "active": true
+    }
+}
+]

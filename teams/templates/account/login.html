@@ -1,0 +1,36 @@
+{% extends "account/base_entrance.html" %}
+{% load i18n %}
+{% load allauth account %}
+{% block head_title %}
+    {% trans "Sign In" %}
+{% endblock head_title %}
+{% block content %}
+{% element h1 %}
+    {% trans "Sign In" %}
+{% endelement %}
+
+{% comment %}
+    This template is only needed because we need to remove the link to the
+    default signup. We might be able to remove it if django-allauth will make it
+    easy to disable and hide the default signup.
+{% endcomment %}
+
+{% url 'account_login' as login_url %}
+{% element form form=form method="post" action=login_url tags="entrance,login" %}
+    {% slot body %}
+        {% csrf_token %}
+        {% element fields form=form unlabeled=True %}
+        {% endelement %}
+        {% if redirect_field_value %}
+            <input type="hidden"
+                name="{{ redirect_field_name }}"
+                value="{{ redirect_field_value }}" />
+        {% endif %}
+    {% endslot %}
+    {% slot actions %}
+        {% element button type="submit" tags="prominent,login" %}
+            {% trans "Sign In" %}
+        {% endelement %}
+    {% endslot %}
+{% endelement %}
+{% endblock content %}
