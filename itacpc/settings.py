@@ -187,4 +187,5 @@ if not DEBUG:
     SECURE_SSL_REDIRECT = True
     SESSION_COOKIE_SECURE = True
     CSRF_COOKIE_SECURE = True
-    ALLOWED_HOSTS = ['teams.itacpc.it']
+    ALLOWED_HOSTS = ['teams.itacpc.it', 'localhost']
+    STATIC_ROOT = BASE_DIR / 'static/'
