@@ -157,9 +157,9 @@ STATIC_URL = "static/"
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 # Redirect URLs for login/logout
-LOGIN_URL = "/teams/login/"
-LOGIN_REDIRECT_URL = "/teams"
-LOGOUT_REDIRECT_URL = "/teams"
+LOGIN_URL = "/login/"
+LOGIN_REDIRECT_URL = "/"
+LOGOUT_REDIRECT_URL = "/"
 
 # Email
 if DEBUG:

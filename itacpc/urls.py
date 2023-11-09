@@ -31,11 +31,11 @@ class NoChangePrimaryEmailView(EmailView):
 
 urlpatterns = [
     # Override allauth default signup
-    path('teams/signup/', page_not_found, {"exception": HttpResponseNotFound}),
+    path('signup/', page_not_found, {"exception": HttpResponseNotFound}),
     # Override allouth email management page (restricts changing primary email)
-    path('team/email/', NoChangePrimaryEmailView.as_view()),
+    path('email/', NoChangePrimaryEmailView.as_view()),
 
-    path("teams/", include("allauth.urls")),
-    path("teams/", include("teams.urls")),
+    path("", include("allauth.urls")),
+    path("", include("teams.urls")),
     path("admin/", admin.site.urls),
 ]
