@@ -38,7 +38,7 @@
                         &bullet;
                         {% if s.github_handle %}<a href="https://github.com/{{ s.github_handle }}">G</a>{% else %}G{% endif %}
                         &bullet;
-                        <abbr style="color: {% if s.is_swerc_eligible %}green{% else %}brown{% endif %}" title="SWERC {% if not s.is_swerc_eligible %}in{% endif %}eligible">S</abbr>)
+                        <abbr style="color: {% if s.is_staff %}blue{% else %}{% if s.is_swerc_eligible %}green{% else %}brown{% endif %}{% endif %}" title="{% if s.is_staff %}Staff member, will not actually participate{% else %}SWERC {% if not s.is_swerc_eligible %}in{% endif %}eligible{% endif %}">S</abbr>)
                         </span>
                     </li>
                     {% endfor %}
@@ -71,7 +71,7 @@
                     &bullet;
                     {% if s.github_handle %}<a href="https://github.com/{{ s.github_handle }}">G</a>{% else %}G{% endif %}
                     &bullet;
-                    <abbr style="color: {% if s.is_swerc_eligible %}green{% else %}brown{% endif %}" title="SWERC {% if not s.is_swerc_eligible %}in{% endif %}eligible">S</abbr>)
+                    <abbr style="color: {% if s.is_staff %}blue{% else %}{% if s.is_swerc_eligible %}green{% else %}brown{% endif %}{% endif %}" title="{% if s.is_staff %}Staff member, will not actually participate{% else %}SWERC {% if not s.is_swerc_eligible %}in{% endif %}eligible{% endif %}">S</abbr>)
                 {% endif %}
                 </span>
             </li>
