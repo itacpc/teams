@@ -80,6 +80,11 @@ header {
   background-color: lightcoral;
 }
 
+.helptext {
+  font-size: x-small;
+  color: gray;
+}
+
 #flashes {
   position: absolute;
   right: 1rem;

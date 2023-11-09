@@ -43,18 +43,20 @@
     </div>
 </div>
 
-<div class="card {% if team_credentials %}special{% endif %}">
+<div class="card {% if student.team.credentials %}special{% endif %}">
   <div class="card-info">
     <h2>Contest access credentials</h2>
 
-    {% if team_credentials %}
+    {% if student.team.credentials %}
       <div>Use the following credentials to access <a href="https://judge.itacpc.it/">the contest</a>.</div>
       <ul class="large-font">
         <li>
-          <strong>Username</strong>: <code>{{team_credentials.username}}</code>
+          <strong>Username</strong>:
+          <code>{{student.team.credentials.username}}</code>
         </li>
         <li>
-          <strong>Password</strong>: <code>{{team_credentials.password}}</code>
+          <strong>Password</strong>:
+          <code>{{student.team.credentials.password}}</code>
         </li>
       </ul>
       {% else %}

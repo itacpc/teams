@@ -63,10 +63,15 @@ class User(AbstractUser):
     created_at = models.DateTimeField(auto_now_add=True)
     username = None
     email = models.EmailField(unique=True, null=False, blank=False)
+    is_swerc_eligible = models.BooleanField(null=False, default=False, blank=True, verbose_name="I am eligible for SWERC", help_text="""
+        Not mandatory. See <a href="https://icpc.global/regionals/rules"
+        target="_blank">eligibility criteria</a> and <a href="https://swerc.eu/"
+        target="_blank">information about SWERC</a> and check this box if you
+        would be interested in participating to SWERC.""")
     is_verified = models.BooleanField(null=False, default=False)
     university = models.ForeignKey(University, on_delete=models.CASCADE, null=False, blank=False)
     team = models.ForeignKey(Team, on_delete=models.SET_NULL, null=True, blank=True)
-    subscribed = models.BooleanField(default=True, verbose_name="Subscribe to email updates (needed to receive access credentials)")
+    subscribed = models.BooleanField(default=True, verbose_name="Subscribe to email updates", help_text="Needed to receive contest access credentials.")
     codeforces_handle = models.CharField(max_length=200, null=True, blank=True)
     kattis_handle = models.CharField(max_length=200, null=True, blank=True)
     olinfo_handle = models.CharField(max_length=200, null=True, blank=True)
@@ -86,6 +91,10 @@ class User(AbstractUser):
 
 
 class TeamJoinEvent(models.Model):
+    created_at = models.DateTimeField(auto_now_add=True)
     user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
     team = models.ForeignKey(Team, on_delete=models.SET_NULL, null=True)
     joining = models.BooleanField()
+
+    def __str__(self) -> str:
+        return f"{self.user} {'joined' if self.joining else 'left'} team {self.team} on {self.created_at}"

@@ -29,19 +29,23 @@
                     {% for s in g %}
                     <li>
                         <i>{{ s.full_name }}</i>
-                        ({% if s.kattis_handle %}<a href="https://open.kattis.com/users/{{ s.kattis_handle }}">ka</a>{% else %}ka{% endif %}
+                        <span style="font-size: x-small">
+                        ({% if s.kattis_handle %}<a href="https://open.kattis.com/users/{{ s.kattis_handle }}">K</a>{% else %}K{% endif %}
                         &bullet;
-                        {% if s.olinfo_handle %}<a href="https://training.olinfo.it/#/user/{{ s.olinfo_handle }}/profile">oli</a>{% else %}oli{% endif %}
+                        {% if s.olinfo_handle %}<a href="https://training.olinfo.it/#/user/{{ s.olinfo_handle }}/profile">O</a>{% else %}O{% endif %}
                         &bullet;
-                        {% if s.codeforces_handle %}<a href="https://codeforces.com/profile/{{ s.codeforces_handle }}">cf</a>{% else %}cf{% endif %}
+                        {% if s.codeforces_handle %}<a href="https://codeforces.com/profile/{{ s.codeforces_handle }}">C</a>{% else %}C{% endif %}
                         &bullet;
-                        {% if s.github_handle %}<a href="https://github.com/{{ s.github_handle }}">gh</a>{% else %}gh{% endif %})
+                        {% if s.github_handle %}<a href="https://github.com/{{ s.github_handle }}">G</a>{% else %}G{% endif %}
+                        &bullet;
+                        <abbr style="color: {% if s.is_swerc_eligible %}green{% else %}brown{% endif %}" title="SWERC {% if not s.is_swerc_eligible %}in{% endif %}eligible">S</abbr>)
+                        </span>
                     </li>
                     {% endfor %}
                 </ul>
             </li>
             {% empty %}
-            <li style="color: red">
+            <li style="color: brown">
                 no teams yet
             </li>
             {% endfor %}
@@ -55,20 +59,24 @@
             {% for s in students_left %}
             <li>
                 <i>{{ s.full_name }}</i>
+                <span style="font-size: x-small">
                 {% if not s.is_verified %}
-                    <span style="font-size: x-small">(not verified)</span>
+                    (not verified)
                 {% else %}
-                    ({% if s.kattis_handle %}<a href="https://open.kattis.com/users/{{ s.kattis_handle }}">ka</a>{% else %}ka{% endif %}
+                    ({% if s.kattis_handle %}<a href="https://open.kattis.com/users/{{ s.kattis_handle }}">K</a>{% else %}K{% endif %}
                     &bullet;
-                    {% if s.olinfo_handle %}<a href="https://training.olinfo.it/#/user/{{ s.olinfo_handle }}/profile">oli</a>{% else %}oli{% endif %}
+                    {% if s.olinfo_handle %}<a href="https://training.olinfo.it/#/user/{{ s.olinfo_handle }}/profile">O</a>{% else %}O{% endif %}
                     &bullet;
-                    {% if s.codeforces_handle %}<a href="https://codeforces.com/profile/{{ s.codeforces_handle }}">cf</a>{% else %}cf{% endif %}
+                    {% if s.codeforces_handle %}<a href="https://codeforces.com/profile/{{ s.codeforces_handle }}">C</a>{% else %}C{% endif %}
                     &bullet;
-                    {% if s.github_handle %}<a href="https://github.com/{{ s.github_handle }}">gh</a>{% else %}gh{% endif %})
+                    {% if s.github_handle %}<a href="https://github.com/{{ s.github_handle }}">G</a>{% else %}G{% endif %}
+                    &bullet;
+                    <abbr style="color: {% if s.is_swerc_eligible %}green{% else %}brown{% endif %}" title="SWERC {% if not s.is_swerc_eligible %}in{% endif %}eligible">S</abbr>)
                 {% endif %}
+                </span>
             </li>
             {% empty %}
-            <li style="color: red">
+            <li style="color: brown">
                 no students yet
             </li>
             {% endfor %}

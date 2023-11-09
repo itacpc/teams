@@ -63,7 +63,7 @@ def my_profile(request):
     class ProfileForm(forms.ModelForm):
         class Meta:
             model = User
-            fields = ['first_name', 'last_name', 'kattis_handle', 'olinfo_handle', 'codeforces_handle', 'github_handle', 'subscribed']
+            fields = ['first_name', 'last_name', 'kattis_handle', 'olinfo_handle', 'codeforces_handle', 'github_handle', 'subscribed', 'is_swerc_eligible']
 
     student = request.user
     university = student.university
@@ -77,17 +77,10 @@ def my_profile(request):
     else:
         form = ProfileForm(instance=student)
 
-        team_credentials = None
-        # {
-        #     'username': 'pippo',
-        #     'password': '123',
-        # }
-
         return render(request, "teams/my_profile.html", {
             "student": student,
             "university": university,
             "form": form,
-            "team_credentials": team_credentials,
         })
 
 def university(request, university_short_name):
@@ -118,7 +111,17 @@ class StudentSignUpView(SignupView):
     class UserForm(SignupForm):
         first_name = forms.CharField()
         last_name = forms.CharField()
+        is_swerc_eligible = forms.BooleanField(
+            required=False,
+            label="I am eligible for SWERC",
+            help_text="""
+                Not mandatory. See <a href="https://icpc.global/regionals/rules"
+                target="_blank">eligibility criteria</a> and <a href="https://swerc.eu/"
+                target="_blank">information about SWERC</a> and check this box if you
+                would be interested in participating to SWERC.""")
         university = None
+
+        field_order = ('first_name', 'last_name', 'email', 'password1', 'password2', 'is_swerc_eligible')
 
         def __init__(self, university_short_name, *args, **kwargs):
             super().__init__(*args, **kwargs)
@@ -213,6 +216,9 @@ def create_team(request, university_short_name):
 
             request.user.team = team
             request.user.save()
+
+            event = TeamJoinEvent(user=request.user, team=team, joining=True)
+            event.save()
 
             return render(request, "teams/university_team_created.html", {
                 "team": team,
