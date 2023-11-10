@@ -27,7 +27,7 @@ class NoChangePrimaryEmailView(EmailView):
         if "action_primary" in request.POST:
             raise PermissionDenied()
 
-        super().post(request, *args, **kwargs)
+        return super().post(request, *args, **kwargs)
 
 urlpatterns = [
     # Override allauth default signup
