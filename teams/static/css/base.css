@@ -104,12 +104,19 @@ header {
 }
 
 .userbar {
-  max-width: 200px;
   align-self: flex-end;
   padding: 0.3rem 2rem;
   background-color: white;
-  margin-left: 1rem;
+  margin-right: 5px;
   border: 1px solid gray;
+}
+
+.university-warning {
+  font-style: italic;
+  margin-top: 0.5rem;
+  background-color: yellow;
+  display: inline-block;
+  margin-left: 6px;
 }
 
 .special {
