@@ -1,12 +1,16 @@
+import json
+
 from django import forms
 from django.conf import settings
 from django.contrib import messages
-from django.contrib.auth.decorators import login_required
+from django.contrib.admin.views.decorators import staff_member_required
+from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.auth.models import User
+from django.core.exceptions import SuspiciousOperation
 from django.db import transaction
 from django.db.models import Count
 from django.shortcuts import get_object_or_404, redirect, render
-from django.http import HttpResponsePermanentRedirect, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponsePermanentRedirect, HttpResponseRedirect
 from django.utils.crypto import get_random_string
 from teams.models import TeamJoinEvent, User, Team, University
 from allauth.account.views import SignupView
@@ -318,3 +322,90 @@ def leave_team(request):
         return redirect('my-profile')
 
     return render(request, "teams/leave_team.html")
+
+def download_json_as_file(data, filename):
+    response = HttpResponse(json.dumps(data, indent=4))
+    response['Content-Disposition'] = f'attachment; filename={filename}'
+    return response
+
+@staff_member_required
+@user_passes_test(lambda u: u.is_superuser, login_url='/')
+def export_data(request):
+    if request.method == "GET":
+        return render(request, "teams/export_data.html")
+
+    key = request.POST['key']
+
+    if key == 'groups':
+        groups = [{
+            "id": "1001",
+            "icpc_id": "1001",
+            "name": "ITACPC students",
+            "sortorder": 1,
+        }, {
+            "id": "1002",
+            "icpc_id": "1002",
+            "name": "ITACPC non-students",
+            "sortorder": 2,
+        }]
+        return download_json_as_file(groups, 'groups.json')
+    
+    elif key == 'organizations':
+        organizations = []
+
+        for university in University.objects.all():
+            if User.objects.filter(university=university).count() > 0:
+                organizations.append({
+                    "id": university.short_name,
+                    "icpc_id": university.short_name,
+                    "name": university.short_name,
+                    "formal_name": university.name,
+                    "country": "ITA",
+                })
+        return download_json_as_file(organizations, 'organizations.json')
+    
+    elif key == 'teams':
+        teams = []
+
+        for team in Team.objects.all():
+            team_id = f"itacpc-team-{team.id}"
+
+            teams.append({
+                "id": team_id,
+                "icpc_id": team_id,
+                "group_ids": ['1002' if team.university.short_name == 'other' else '1001'],
+                "name": team.name,
+                "organization_id": team.university.short_name,
+            })
+        return download_json_as_file(teams, 'teams.json')
+
+    elif key == 'accounts':
+        accounts = []
+
+        for user in User.objects.all():
+            if not user.is_verified or user.is_staff:
+                continue
+
+            user_id = f"itacpc-user-{user.id}"
+
+            # Generate credentials only once per user (so that we can request
+            # accounts.json multiple times without getting different results)
+            if not user.credentials:
+                user.credentials = {
+                    "username": user_id,
+                    "password": get_random_string(8),
+                }
+                user.save()
+
+            accounts.append({
+                "id": user_id,
+                "username": user.credentials['username'],
+                "password": user.credentials['password'],
+                "type": "team",
+                "name": user.full_name,
+                "team_id": f"itacpc-team-{user.team.id}",
+            })
+        return download_json_as_file(accounts, 'accounts.json')
+
+    else:
+        raise SuspiciousOperation('Invalid request')

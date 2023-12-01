@@ -1,0 +1,38 @@
+{% extends "teams/base.html" %}
+
+{% block header %}
+{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-info">
+        <h1>Export data</h1>
+        <a href="{% url 'index' %}">Back to list of universities</a>
+    </div>
+</div>
+
+<div class="card">
+  <div class="card-info">
+    <form method=post>
+        {% csrf_token %}
+        <input type="hidden" name="key" value="groups">
+        <input type=submit value="groups.json">
+    </form>
+    <form method=post>
+        {% csrf_token %}
+        <input type="hidden" name="key" value="organizations">
+        <input type=submit value="organizations.json">
+    </form>
+    <form method=post>
+        {% csrf_token %}
+        <input type="hidden" name="key" value="teams">
+        <input type=submit value="teams.json">
+    </form>
+    <form method=post>
+        {% csrf_token %}
+        <input type="hidden" name="key" value="accounts">
+        <input type=submit value="accounts.json">
+    </form>
+  </div>
+</div>
+{% endblock %}
