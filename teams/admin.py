@@ -15,7 +15,7 @@ class UniversityAdmin(admin.ModelAdmin):
 
 @admin.register(User)
 class UserAdmin(admin.ModelAdmin):
-    list_display = ('full_name', 'university', 'team')
+    list_display = ('full_name', 'university', 'team', 'is_verified', 'created_at')
 
     list_filter = ('university',)
 
@@ -27,7 +27,7 @@ class UserAdmin(admin.ModelAdmin):
 
 
 @admin.register(Team)
-class UserAdmin(admin.ModelAdmin):
+class TeamAdmin(admin.ModelAdmin):
     list_display = ('name', 'university', 'students')
 
     list_filter = ('university',)
