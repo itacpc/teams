@@ -1,12 +1,12 @@
 from django import forms
+from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
-from django.core.exceptions import PermissionDenied
 from django.db import transaction
-from django.db.models import Count, Q, F
+from django.db.models import Count
 from django.shortcuts import get_object_or_404, redirect, render
-from django.http import HttpResponse, HttpResponsePermanentRedirect, HttpResponseRedirect
+from django.http import HttpResponsePermanentRedirect, HttpResponseRedirect
 from django.utils.crypto import get_random_string
 from teams.models import TeamJoinEvent, User, Team, University
 from allauth.account.views import SignupView
@@ -155,6 +155,10 @@ class StudentSignUpView(SignupView):
     success_url = None
 
     def post(self, request, *args, **kwargs):
+        if settings.REGISTRATION_IS_CLOSED:
+            messages.error(request, 'It is too late now to register.')
+            return redirect('university', university_short_name=kwargs['university_short_name'])
+
         form_class = self.get_form_class()
         form = self.get_form(form_class)
         if form.is_valid():
@@ -166,6 +170,10 @@ class StudentSignUpView(SignupView):
         )
 
     def get(self, request, university_short_name, **kwargs):
+        if settings.REGISTRATION_IS_CLOSED:
+            messages.error(request, 'It is too late now to register.')
+            return redirect('university', university_short_name=university_short_name)
+
         kwargs['university_short_name'] = university_short_name
         return self.render_to_response(self.get_context_data(**kwargs))
     
@@ -195,6 +203,10 @@ def create_team(request, university_short_name):
         class Meta:
             model = Team
             fields = ["name"]
+
+    if settings.REGISTRATION_IS_CLOSED:
+        messages.error(request, 'It is too late now to make changes to the teams.')
+        return redirect('my-profile')
 
     university = get_object_or_404(University, short_name=university_short_name)
     if university != request.user.university:
@@ -236,6 +248,10 @@ def create_team(request, university_short_name):
 def join_team(request, secret):
     MAX_MEMBERS = 3
 
+    if settings.REGISTRATION_IS_CLOSED:
+        messages.error(request, 'It is too late now to make changes to the teams.')
+        return redirect('my-profile')
+
     team = get_object_or_404(Team, secret=secret)
 
     if team.university != request.user.university:
@@ -275,6 +291,10 @@ def join_team(request, secret):
 @login_required
 def leave_team(request):
     if request.method == "POST":
+        if settings.REGISTRATION_IS_CLOSED:
+            messages.error(request, 'It is too late now to make changes to the teams.')
+            return redirect('my-profile')
+
         # Run in a transaction to prevent race conditions (e.g. someone else
         # joins the team right before we check if the team is empty)
         with transaction.atomic():

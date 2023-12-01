@@ -179,6 +179,9 @@ ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
 ACCOUNT_ADAPTER = 'teams.adapters.StudentAccountAdapter'
 
+# Temporary way to close registrations (needs to be implemented better)
+REGISTRATION_IS_CLOSED = eval(os.getenv("REGISTRATION_IS_CLOSED", default="False"))
+
 # Prod stuff
 if not DEBUG:
     SECURE_HSTS_PRELOAD = True
