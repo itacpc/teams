@@ -377,6 +377,22 @@ def export_data(request):
                 "name": team.name,
                 "organization_id": team.university.short_name,
             })
+
+        # Create a fake team for the single users
+        for user in User.objects.filter(team=None).all():
+            if not user.is_verified or user.is_staff:
+                continue
+
+            team_id = f"itacpc-single-{user.id}"
+
+            teams.append({
+                "id": team_id,
+                "icpc_id": team_id,
+                "group_ids": ['1002' if user.university.short_name == 'other' else '1001'],
+                "name": user.name,
+                "organization_id": user.university.short_name,
+            })
+
         return download_json_as_file(teams, 'teams.json')
 
     elif key == 'accounts':
@@ -403,7 +419,7 @@ def export_data(request):
                 "password": user.credentials['password'],
                 "type": "team",
                 "name": user.full_name,
-                "team_id": f"itacpc-team-{user.team.id}",
+                "team_id": f"itacpc-team-{user.team.id}" if user.team else f"itacpc-single-{user.id}",
             })
         return download_json_as_file(accounts, 'accounts.json')
 
