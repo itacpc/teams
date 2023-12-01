@@ -389,7 +389,7 @@ def export_data(request):
                 "id": team_id,
                 "icpc_id": team_id,
                 "group_ids": ['1002' if user.university.short_name == 'other' else '1001'],
-                "name": user.name,
+                "name": user.full_name,
                 "organization_id": user.university.short_name,
             })
 
