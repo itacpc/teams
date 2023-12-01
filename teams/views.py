@@ -81,6 +81,7 @@ def my_profile(request):
             "student": student,
             "university": university,
             "form": form,
+            "can_disclose_credentials": settings.CAN_DISCLOSE_CREDENTIALS,
         })
 
 def university(request, university_short_name):

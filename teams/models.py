@@ -76,6 +76,7 @@ class User(AbstractUser):
     kattis_handle = models.CharField(max_length=200, null=True, blank=True)
     olinfo_handle = models.CharField(max_length=200, null=True, blank=True)
     github_handle = models.CharField(max_length=200, null=True, blank=True)
+    credentials = models.JSONField(null=True, blank=True)
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['first_name', 'last_name', 'university_id']  # for manage.py createsuperuser

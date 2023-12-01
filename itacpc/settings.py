@@ -181,6 +181,7 @@ ACCOUNT_ADAPTER = 'teams.adapters.StudentAccountAdapter'
 
 # Temporary way to close registrations (needs to be implemented better)
 REGISTRATION_IS_CLOSED = eval(os.getenv("REGISTRATION_IS_CLOSED", default="False"))
+CAN_DISCLOSE_CREDENTIALS = eval(os.getenv("CAN_DISCLOSE_CREDENTIALS", default="False"))
 
 # Prod stuff
 if not DEBUG:

@@ -47,16 +47,16 @@
   <div class="card-info">
     <h2>Contest access credentials</h2>
 
-    {% if student.team.credentials %}
+    {% if student.credentials and can_disclose_credentials %}
       <div>Use the following credentials to access <a href="https://judge.itacpc.it/">the contest</a>.</div>
       <ul class="large-font">
         <li>
           <strong>Username</strong>:
-          <code>{{student.team.credentials.username}}</code>
+          <code>{{student.credentials.username}}</code>
         </li>
         <li>
           <strong>Password</strong>:
-          <code>{{student.team.credentials.password}}</code>
+          <code>{{student.credentials.password}}</code>
         </li>
       </ul>
       {% else %}
