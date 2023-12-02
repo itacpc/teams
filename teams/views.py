@@ -1,5 +1,8 @@
+import csv
+import io
 import json
 
+from allauth.account.models import EmailAddress
 from django import forms
 from django.conf import settings
 from django.contrib import messages
@@ -328,6 +331,16 @@ def download_json_as_file(data, filename):
     response['Content-Disposition'] = f'attachment; filename={filename}'
     return response
 
+def download_csv_as_file(data, filename):
+    output = io.StringIO()
+    fieldnames = ['username', 'password', 'email']
+    writer = csv.DictWriter(output, fieldnames=fieldnames, extrasaction='ignore')
+    writer.writeheader()
+    writer.writerows(data)
+    response = HttpResponse(output.getvalue())
+    response['Content-Disposition'] = f'attachment; filename={filename}'
+    return response
+
 @staff_member_required
 @user_passes_test(lambda u: u.is_superuser, login_url='/')
 def export_data(request):
@@ -395,7 +408,7 @@ def export_data(request):
 
         return download_json_as_file(teams, 'teams.json')
 
-    elif key == 'accounts':
+    elif key == 'accounts' or key == 'accounts-csv':
         accounts = []
 
         for user in User.objects.all():
@@ -412,16 +425,23 @@ def export_data(request):
                     "password": get_random_string(8),
                 }
                 user.save()
+            
+            user_emails = map(str, EmailAddress.objects.filter(verified=True, user=user).all())
 
             accounts.append({
                 "id": user_id,
                 "username": user.credentials['username'],
                 "password": user.credentials['password'],
+                "email": ",".join(user_emails),
                 "type": "team",
                 "name": user.full_name,
                 "team_id": f"itacpc-team-{user.team.id}" if user.team else f"itacpc-single-{user.id}",
             })
-        return download_json_as_file(accounts, 'accounts.json')
+        
+        if key == 'accounts-csv':
+            return download_csv_as_file(accounts, 'accounts.csv')
+        else:
+            return download_json_as_file(accounts, 'accounts.json')
 
     else:
         raise SuspiciousOperation('Invalid request')

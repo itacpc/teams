@@ -33,6 +33,11 @@
         <input type="hidden" name="key" value="accounts">
         <input type=submit value="accounts.json">
     </form>
+    <form method=post>
+        {% csrf_token %}
+        <input type="hidden" name="key" value="accounts-csv">
+        <input type=submit value="accounts.csv">
+    </form>
   </div>
 </div>
 {% endblock %}
