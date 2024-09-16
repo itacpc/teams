@@ -746,5 +746,16 @@
         "kattis_subdivision": "IT-34",
         "active": true
     }
+},
+{
+    "model": "teams.university",
+    "pk": 69,
+    "fields": {
+        "short_name": "unibocconi",
+        "name": "Università commerciale \"Luigi Bocconi\"",
+        "domain": "studbocconi.it",
+        "kattis_subdivision": null,
+        "active": true
+    }
 }
 ]
