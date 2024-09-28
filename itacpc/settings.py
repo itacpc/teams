@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     "django.contrib.auth",
     "django.contrib.contenttypes",
     "django.contrib.sessions",
+    "django.contrib.sites",
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "allauth",
@@ -88,6 +89,9 @@ AUTHENTICATION_BACKENDS = [
 
 WSGI_APPLICATION = "itacpc.wsgi.application"
 
+# Sites
+# https://docs.djangoproject.com/en/5.1/ref/contrib/sites/
+SITE_ID = 1
 
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases

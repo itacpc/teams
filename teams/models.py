@@ -1,5 +1,6 @@
 from typing import Any
 from django.contrib.auth.models import AbstractUser, BaseUserManager
+from django.contrib.sites.models import Site
 from django.db import models
 from django.shortcuts import resolve_url
 from django.templatetags.static import static
@@ -42,8 +43,9 @@ class Team(models.Model):
 
     @property
     def invitation_link(self):
+        domain = Site.objects.get_current().domain
         url = resolve_url('join-team', secret=self.secret)
-        return f"https://teams.itacpc.it{url}"
+        return f"https://{domain}{url}"
 
     @property
     def students(self):
