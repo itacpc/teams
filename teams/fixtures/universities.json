@@ -511,7 +511,7 @@
     "fields": {
         "short_name": "unipv",
         "name": "Università degli Studi di Pavia",
-        "domain": "unipv.it",
+        "domain": "universitadipavia.it",
         "kattis_subdivision": "IT-25",
         "active": true
     }
