@@ -393,7 +393,7 @@ def export_data(request):
 
         # Create a fake team for the single users
         for user in User.objects.filter(team=None).all():
-            if not user.is_verified or user.is_staff:
+            if not user.is_verified:
                 continue
 
             team_id = f"itacpc-single-{user.id}"
