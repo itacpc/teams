@@ -412,7 +412,7 @@ def export_data(request):
         accounts = []
 
         for user in User.objects.all():
-            if not user.is_verified or user.is_staff:
+            if not user.is_verified:
                 continue
 
             user_id = f"itacpc-user-{user.id}"
