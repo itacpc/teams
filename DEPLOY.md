@@ -22,10 +22,41 @@
 1. Clone this repository `git clone git@github.com:itacpc/teams.git`.
 1. Enter the repository and create the pipenv `pipenv install`.
 1. Log in as `postgres` by running `sudo su - postgres`, then:
-    1. Create DB user `itacpc`, with password `itacpc`, by running: `createuser -P itacpc` and passing `itacpc` in the password field.
+    1. Create DB user `itacpc` with a password, by running: `createuser -P itacpc`.
     1. Create DB `itacpc` owned by user `itacpc`, by running: `createdb itacpc -O itacpc`.
     1. Exit back to the previous shell.
-1. TODO: add production `.env` file, initialize universities, create superuser.
+1. Create the log file for Django `sudo touch /var/log/django.log`.
+1. Make the log file writable `sudo chown itacpc:www-data /var/log/django.log`.
+1. Create the static files folder for Django `sudo mkdir /var/www/django`
+1. Make the folder writable `sudo chown root:www-data /var/www/django`.
+1. Enter the virtual environment `pipenv shell`, then:
+    1. Run the migrations to initialize the DB `python3 ./manage.py migrate`.
+    1. Load the universities `python3 ./manage.py loaddata universities`.
+    1. Create a superuser `python3 ./manage.py createsuperuser`.
+    1. Collect static files (CSS, flags, etc) `python3 ./manage.py collectstatic`.
+    1. Exit back to the previous shell.
+1. Create a `.env` file with this content:
+    ```
+    DEBUG = False
+    REGISTRATION_IS_CLOSED = False
+    CAN_DISCLOSE_CREDENTIALS = False
+    SECRET_KEY = "generate-a-new-secret-key-here"
+    EMAIL_HOST = mail-server-host-here
+    EMAIL_PORT = 587
+    EMAIL_HOST_USER = mail-server-user-here
+    EMAIL_HOST_PASSWORD = mail-server-password-here
+    DB_NAME = itacpc
+    DB_USER = itacpc
+    DB_PASSWORD = database-password-here
+    DB_HOST = 'localhost'
+    DB_PORT = ''
+    ```
+
+    You can generate a key via `django-admin shell` by running:
+    ```
+    from django.core.management.utils import get_random_secret_key
+    get_random_secret_key()
+    ```
 1. Update the systemd configuration in `systemd/gunicorn.service` with the correct Python virtual environment path.
 1. Copy the systemd configuration `sudo cp systemd/* /etc/systemd/system/`.
 1. Enable the systemd configuration `sudo systemctl enable gunicorn --now`.
