@@ -441,7 +441,7 @@ def export_data(request):
 
             # Add fields that are used by Mailipy
             if key == "accounts-csv":
-                obj["team_name"] = user.team.name
+                obj["team_name"] = user.team.name if user.team else user.full_name
 
             accounts.append(obj)
         
