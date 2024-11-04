@@ -64,3 +64,9 @@
 1. Disable the default nginx configuration `sudo rm /etc/nginx/sites-enabled/default`.
 1. Enable the new nginx configuration `sudo ln -s /etc/nginx/sites-available/itacpc /etc/nginx/sites-enabled/itacpc`.
 1. Run certbot to fix HTTPS stuff: `sudo certbot`.
+
+## When the instance is not needed anymore (i.e. some time after the contest)
+
+1. TODO: backup
+1. TODO: change nginx configuration to redirect `teamsXX.itacpc.it` to `itacpc.it`
+1. Destroy the droplet.
