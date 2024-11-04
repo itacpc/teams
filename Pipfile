@@ -11,6 +11,7 @@ django = "*"
 django-allauth = "*"
 python-dotenv = "*"
 gunicorn = "*"
+psycopg = "*"
 
 [requires]
 python_version = "3.12"

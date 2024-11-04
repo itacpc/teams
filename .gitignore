@@ -4,3 +4,5 @@ __pycache__/
 old_app/
 .env*
 /static
+gunicorn.access.log
+gunicorn.error.log

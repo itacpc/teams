@@ -8,9 +8,7 @@ User=itacpc
 Group=www-data
 WorkingDirectory=/home/itacpc/teams
 ExecStart=/home/itacpc/.local/share/virtualenvs/teams-_GRcvIg0/bin/gunicorn \
-          --access-logfile - \
-          --workers 3 \
-          --bind unix:/run/gunicorn.sock \
+          --config ./gunicorn.conf.py \
           itacpc.wsgi:application
 
 [Install]
