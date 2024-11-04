@@ -2,7 +2,7 @@
 
 Ensure that:
 
-1. you have Python 3.11 installed.
+1. you have Python 3.12 installed.
 2. you have [pipenv](https://docs.pipenv.org/en/latest/) installed.
 
 Then you can proceed.
@@ -40,3 +40,7 @@ pipenv shell
 ```
 python3 manage.py runserver
 ```
+
+## Deploy the project
+
+Check out [DEPLOY.md](DEPLOY.md).
