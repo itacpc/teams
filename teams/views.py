@@ -41,7 +41,7 @@ def index(request):
         user_own_university = request.user.university
 
     unis_with_count = University.objects.annotate(teams=Count('team', distinct=True), students=Count('user', distinct=True))
-    other_university = unis_with_count.filter(short_name='other').get()
+    other_university = unis_with_count.filter(short_name='other').first()
 
     # List all university except the "other" one
     unis = unis_with_count.exclude(short_name='other').order_by('-teams', '-students', 'short_name').all()
@@ -333,7 +333,7 @@ def download_json_as_file(data, filename):
 
 def download_csv_as_file(data, filename):
     output = io.StringIO()
-    fieldnames = ['username', 'password', 'email']
+    fieldnames = ['email', 'name', 'team_name', 'username', 'password']
     writer = csv.DictWriter(output, fieldnames=fieldnames, extrasaction='ignore')
     writer.writeheader()
     writer.writerows(data)
@@ -428,7 +428,8 @@ def export_data(request):
             
             user_emails = map(str, EmailAddress.objects.filter(verified=True, user=user).all())
 
-            accounts.append({
+            # Add all fields that are used by DOMJudge
+            obj = {
                 "id": user_id,
                 "username": user.credentials['username'],
                 "password": user.credentials['password'],
@@ -436,7 +437,13 @@ def export_data(request):
                 "type": "team",
                 "name": user.full_name,
                 "team_id": f"itacpc-team-{user.team.id}" if user.team else f"itacpc-single-{user.id}",
-            })
+            }
+
+            # Add fields that are used by Mailipy
+            if key == "accounts-csv":
+                obj["team_name"] = user.team.name
+
+            accounts.append(obj)
         
         if key == 'accounts-csv':
             return download_csv_as_file(accounts, 'accounts.csv')
