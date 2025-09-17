@@ -119,9 +119,15 @@ class StudentSignUpView(SignupView):
     class UserForm(SignupForm):
         first_name = forms.CharField()
         last_name = forms.CharField()
+        accept_terms = forms.BooleanField(
+            required=True,
+            label="I accept the contest rules",
+            help_text="""
+                You must accept the <a href="https://itacpc.it/competition/rules" target="_blank">
+                contest rules</a> to register.""")
         is_swerc_eligible = forms.BooleanField(
             required=False,
-            label="I am eligible for SWERC",
+            label="I am eligible for and interested in SWERC",
             help_text="""
                 Not mandatory. See <a href="https://icpc.global/regionals/rules"
                 target="_blank">eligibility criteria</a> and <a href="https://swerc.eu/"
@@ -129,7 +135,7 @@ class StudentSignUpView(SignupView):
                 would be interested in participating to SWERC.""")
         university = None
 
-        field_order = ('first_name', 'last_name', 'email', 'password1', 'password2', 'is_swerc_eligible')
+        field_order = ('first_name', 'last_name', 'email', 'password1', 'password2', 'accept_terms', 'is_swerc_eligible')
 
         def __init__(self, university_short_name, *args, **kwargs):
             super().__init__(*args, **kwargs)
