@@ -12,6 +12,7 @@ django-allauth = "*"
 python-dotenv = "*"
 gunicorn = "*"
 psycopg = "*"
+sendgrid-django = "*"
 
 [requires]
 python_version = "3.12"

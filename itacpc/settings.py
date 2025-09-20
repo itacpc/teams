@@ -168,11 +168,16 @@ LOGOUT_REDIRECT_URL = "/"
 # Email
 if DEBUG:
     EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-EMAIL_HOST = os.getenv("EMAIL_HOST")
-EMAIL_PORT = os.getenv("EMAIL_PORT")
-EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER")
-EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD")
-DEFAULT_FROM_EMAIL = "itacpc@olinfo.it"
+    DEFAULT_FROM_EMAIL = "itacpc@olinfo.it"
+else:
+    EMAIL_BACKEND = "sgbackend.SendGridBackend"
+    SENDGRID_API_KEY = os.getenv("SENDGRID_API_KEY")
+    DEFAULT_FROM_EMAIL = "info@itacpc.it"
+
+# EMAIL_HOST = os.getenv("EMAIL_HOST")
+# EMAIL_PORT = os.getenv("EMAIL_PORT")
+# EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER")
+# EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD")
 
 # Django-allauth
 # https://docs.allauth.org/en/latest/account/configuration.html
