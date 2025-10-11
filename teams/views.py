@@ -350,8 +350,16 @@ def download_csv_as_file(data, filename):
 @staff_member_required
 @user_passes_test(lambda u: u.is_superuser, login_url='/')
 def export_data(request):
+    # Gather all universities that have at least one user
+    unis_with_users = []
+    for university in University.objects.all():
+        if User.objects.filter(university=university).count() > 0:
+            unis_with_users.append(university)
+
     if request.method == "GET":
-        return render(request, "teams/export_data.html")
+        return render(request, "teams/export_data.html", {
+            "unis_with_users": unis_with_users,
+        })
 
     key = request.POST['key']
 
@@ -372,15 +380,14 @@ def export_data(request):
     elif key == 'organizations':
         organizations = []
 
-        for university in University.objects.all():
-            if User.objects.filter(university=university).count() > 0:
-                organizations.append({
-                    "id": university.short_name,
-                    "icpc_id": university.short_name,
-                    "name": university.short_name,
-                    "formal_name": university.name,
-                    "country": "ITA",
-                })
+        for university in unis_with_users:
+            organizations.append({
+                "id": university.short_name,
+                "icpc_id": university.short_name,
+                "name": university.short_name,
+                "formal_name": university.name,
+                "country": "ITA",
+            })
         return download_json_as_file(organizations, 'organizations.json')
     
     elif key == 'teams':
@@ -417,8 +424,18 @@ def export_data(request):
     elif key == 'accounts' or key == 'accounts-csv':
         accounts = []
 
+        # If key is 'accounts-csv', we may filter by university
+        if key == 'accounts-csv':
+            filter_uni = request.POST.get('university', '')
+        else:
+            filter_uni = ''
+
         for user in User.objects.all():
             if not user.is_verified:
+                continue
+
+            # Apply filter if requested
+            if filter_uni and user.university.short_name != filter_uni:
                 continue
 
             user_id = f"itacpc-user-{user.id}"

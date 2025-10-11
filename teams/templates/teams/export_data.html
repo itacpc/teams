@@ -13,15 +13,19 @@
 
 <div class="card">
   <div class="card-info">
-    <form method=post>
-        {% csrf_token %}
-        <input type="hidden" name="key" value="groups">
-        <input type=submit value="groups.json">
-    </form>
+    <p class="card-text">
+        For DOMJudge:
+    </p>
+
     <form method=post>
         {% csrf_token %}
         <input type="hidden" name="key" value="organizations">
         <input type=submit value="organizations.json">
+    </form>
+    <form method=post>
+        {% csrf_token %}
+        <input type="hidden" name="key" value="groups">
+        <input type=submit value="groups.json">
     </form>
     <form method=post>
         {% csrf_token %}
@@ -33,9 +37,22 @@
         <input type="hidden" name="key" value="accounts">
         <input type=submit value="accounts.json">
     </form>
+
+    <p class="card-text">
+        For Mailipy / to send emails:
+    </p>
+
     <form method=post>
         {% csrf_token %}
         <input type="hidden" name="key" value="accounts-csv">
+
+        <label for="university">(optional) Filter by university:</label>
+        <select name="university" id="university">
+            <option value=""></option>
+            {% for u in unis_with_users %}
+                <option value="{{ u.short_name }}">{{ u.name }}</option>
+            {% endfor %}
+        </select>
         <input type=submit value="accounts.csv">
     </form>
   </div>

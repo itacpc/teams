@@ -60,6 +60,14 @@ body {
   margin-left: 0.5rem;
 }
 
+.card-text:not(:first-child) {
+  margin-top: 0.5rem;
+}
+
+.card-text {
+  margin-bottom: 0.5rem;
+}
+
 .card-info > a {
   margin-top: 0.5rem;
 }
