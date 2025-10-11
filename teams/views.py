@@ -339,7 +339,7 @@ def download_json_as_file(data, filename):
 
 def download_csv_as_file(data, filename):
     output = io.StringIO()
-    fieldnames = ['email', 'name', 'team_name', 'username', 'password']
+    fieldnames = ['email', 'name', 'team_name', 'is_swerc_eligible', 'username', 'password']
     writer = csv.DictWriter(output, fieldnames=fieldnames, extrasaction='ignore')
     writer.writeheader()
     writer.writerows(data)
@@ -465,6 +465,7 @@ def export_data(request):
             # Add fields that are used by Mailipy
             if key == "accounts-csv":
                 obj["team_name"] = user.team.name if user.team else user.full_name
+                obj["is_swerc_eligible"] = user.is_swerc_eligible
 
             accounts.append(obj)
         
