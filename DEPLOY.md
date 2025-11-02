@@ -72,6 +72,9 @@
 
 ## When the instance is not needed anymore (i.e. some time after the contest)
 
-1. TODO: backup
-1. TODO: change nginx configuration to redirect `teamsXX.itacpc.it` to `itacpc.it`
-1. Destroy the droplet.
+1. Backup the teams database in the "dumpdata" JSON format that Django can export/import: `./manage.py dumpdata --all --output teams20XX_dumpdata.json`
+1. Also backup in the Postgres format, just in case: `pg_dump -f teams20XX_pgdump.sql`
+1. Save these backup files in the [`manage/archive/teams-data`](https://github.com/itacpc/manage/tree/master/archive/teams-data) folder.
+1. TODO: should we change nginx configuration to redirect `teamsXX.itacpc.it` to `itacpc.it` for a while? For SEO reasons? Probably not so important anyway.
+1. Delete the `teamsXX` DNS entry from Cloudflare.
+1. Destroy the droplet from Digitalocean.
